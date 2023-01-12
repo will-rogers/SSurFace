@@ -27,6 +27,6 @@
 #' check_ssf(m2)
 
 
-check_ssf <- function(x) {
-  "fit_clogit" %in% class(x)
+check_ssf <- function(ssf.obj) {
+  "fit_clogit" %in% class(ssf.obj)
 }

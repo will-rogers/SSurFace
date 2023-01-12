@@ -1,0 +1,2046 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Problem},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Problem}
+\author{}
+\date{\vspace{-2.5em}2022-12-23}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\hypertarget{package-overview}{%
+\section{Package overview(?)}\label{package-overview}}
+
+\hypertarget{dependencies}{%
+\subsection{Dependencies}\label{dependencies}}
+
+These would need need to be imported in finalized package
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --
+\end{verbatim}
+
+\begin{verbatim}
+## v ggplot2 3.3.6     v purrr   0.3.4
+## v tibble  3.1.7     v dplyr   1.0.9
+## v tidyr   1.2.0     v stringr 1.4.0
+## v readr   2.1.2     v forcats 0.5.1
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(lubridate)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'lubridate'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     date, intersect, setdiff, union
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(amt)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'amt'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:stats':
+## 
+##     filter
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(raster)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: sp
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'sp'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:amt':
+## 
+##     bbox
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'raster'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:amt':
+## 
+##     select
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:dplyr':
+## 
+##     select
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(parallel)}
+\FunctionTok{library}\NormalTok{(data.table)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'data.table'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:raster':
+## 
+##     shift
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:lubridate':
+## 
+##     hour, isoweek, mday, minute, month, quarter, second, wday, week,
+##     yday, year
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:dplyr':
+## 
+##     between, first, last
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:purrr':
+## 
+##     transpose
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(Matrix)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'Matrix'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:tidyr':
+## 
+##     expand, pack, unpack
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(progress)}
+\FunctionTok{library}\NormalTok{(pbapply)}
+\FunctionTok{library}\NormalTok{(pbmcapply)}
+\FunctionTok{library}\NormalTok{(igraph)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'igraph'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:raster':
+## 
+##     union
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:lubridate':
+## 
+##     %--%, union
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:dplyr':
+## 
+##     as_data_frame, groups, union
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:purrr':
+## 
+##     compose, simplify
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:tidyr':
+## 
+##     crossing
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:tibble':
+## 
+##     as_data_frame
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     decompose, spectrum
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:base':
+## 
+##     union
+\end{verbatim}
+
+\hypertarget{create-the-surface-prediction}{%
+\subsection{Create the surface
+prediction}\label{create-the-surface-prediction}}
+
+To side-step issues where rasters are of different resolution, we can
+create our own custom grid for predictions that match the most confined
+extents of the rasters. We also might want to specify the resolution of
+that underlying raster. If that raster is in utm (as defined below), we
+can specify x and y cell sizes
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{create\_mock\_surface }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(raster.list, }\AttributeTok{multiple.extents =}\NormalTok{ F, }\AttributeTok{resolution =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x =} \DecValTok{100}\NormalTok{, }\AttributeTok{y =} \DecValTok{100}\NormalTok{))\{}
+  
+  \CommentTok{\# If rasters are all of the same extent, take the extent}
+  \ControlFlowTok{if}\NormalTok{(multiple.extents }\SpecialCharTok{==}\NormalTok{ F)\{}
+\NormalTok{    xmin }\OtherTok{\textless{}{-}} \FunctionTok{extent}\NormalTok{(raster.list)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{    xmax }\OtherTok{\textless{}{-}} \FunctionTok{extent}\NormalTok{(raster.list)[}\DecValTok{2}\NormalTok{]}
+\NormalTok{    ymin }\OtherTok{\textless{}{-}} \FunctionTok{extent}\NormalTok{(raster.list)[}\DecValTok{3}\NormalTok{]}
+\NormalTok{    ymax }\OtherTok{\textless{}{-}} \FunctionTok{extent}\NormalTok{(raster.list)[}\DecValTok{4}\NormalTok{]}
+\NormalTok{  \}}
+  
+  \CommentTok{\# If rasters are of different extent, take the overlap extent}
+  \ControlFlowTok{if}\NormalTok{(multiple.extents }\SpecialCharTok{==}\NormalTok{ T)\{}
+\NormalTok{    xmin }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(}\FunctionTok{unlist}\NormalTok{(}\FunctionTok{lapply}\NormalTok{(raster.list, }\ControlFlowTok{function}\NormalTok{(x) \{}\FunctionTok{extent}\NormalTok{(x)[}\DecValTok{1}\NormalTok{]\})))}
+\NormalTok{    xmax }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(}\FunctionTok{unlist}\NormalTok{(}\FunctionTok{lapply}\NormalTok{(raster.list, }\ControlFlowTok{function}\NormalTok{(x) \{}\FunctionTok{extent}\NormalTok{(x)[}\DecValTok{2}\NormalTok{]\})))}
+\NormalTok{    ymin }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(}\FunctionTok{unlist}\NormalTok{(}\FunctionTok{lapply}\NormalTok{(raster.list, }\ControlFlowTok{function}\NormalTok{(x) \{}\FunctionTok{extent}\NormalTok{(x)[}\DecValTok{3}\NormalTok{]\})))}
+\NormalTok{    ymax }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(}\FunctionTok{unlist}\NormalTok{(}\FunctionTok{lapply}\NormalTok{(raster.list, }\ControlFlowTok{function}\NormalTok{(x) \{}\FunctionTok{extent}\NormalTok{(x)[}\DecValTok{4}\NormalTok{]\})))}
+\NormalTok{  \}}
+  
+  \CommentTok{\# Create new raster }
+\NormalTok{  mock.surface }\OtherTok{\textless{}{-}} \FunctionTok{raster}\NormalTok{(}
+    \AttributeTok{ncol=}\NormalTok{(xmax}\SpecialCharTok{{-}}\NormalTok{xmin)}\SpecialCharTok{/}\NormalTok{resolution}\SpecialCharTok{$}\NormalTok{x, }\CommentTok{\# raster automatically rounds, total cols}
+    \AttributeTok{nrow=}\NormalTok{(ymax}\SpecialCharTok{{-}}\NormalTok{ymin)}\SpecialCharTok{/}\NormalTok{resolution}\SpecialCharTok{$}\NormalTok{y, }\CommentTok{\# raster automatically rounds, total rows}
+    \AttributeTok{xmn=}\NormalTok{xmin, }\CommentTok{\# min x exent}
+    \AttributeTok{xmx=}\NormalTok{xmax, }\CommentTok{\# max x exent}
+    \AttributeTok{ymn=}\NormalTok{ymin, }\CommentTok{\# min y exent}
+    \AttributeTok{ymx=}\NormalTok{ymax, }\CommentTok{\# max y exent}
+    \AttributeTok{crs =} \FunctionTok{crs}\NormalTok{(raster.list[[}\DecValTok{1}\NormalTok{]])) }\CommentTok{\# take CRS from first raster, requires that rasters match in CRS}
+  
+  \FunctionTok{values}\NormalTok{(mock.surface) }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\NormalTok{(}\FunctionTok{ncol}\NormalTok{(mock.surface)}\SpecialCharTok{*}\FunctionTok{nrow}\NormalTok{(mock.surface)) }\CommentTok{\# not important, just for visualization}
+  
+  \FunctionTok{return}\NormalTok{(mock.surface)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{check-model-input}{%
+\subsection{Check model input}\label{check-model-input}}
+
+We should check that a model is correctly specified, before throwing
+errors down the line.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{check\_ssf }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(ssf.obj) \{}
+  \FunctionTok{inherits}\NormalTok{(ssf.obj, }\FunctionTok{c}\NormalTok{(}\StringTok{"fit\_clogit"}\NormalTok{)) }\CommentTok{\# not broad enough, basically just from smt at the moment}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{find-reasonable-step-distances-for-neighborhoods-down-the-line}{%
+\subsection{Find reasonable step distances for neighborhoods down the
+line}\label{find-reasonable-step-distances-for-neighborhoods-down-the-line}}
+
+We should create a reasonable null step, and we can do so by using the
+estimated gamma distribution from amt. However, we could just as easily
+take quantiles from the distribution of step lengths we observe,
+instead.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{step\_distance }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(ssf.obj, quantile) \{}
+  \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{check\_ssf}\NormalTok{(ssf.obj)) }\FunctionTok{stop}\NormalTok{(}\StringTok{"Check that SSF model is valid"}\NormalTok{)}
+  
+\NormalTok{  step }\OtherTok{\textless{}{-}} \FunctionTok{qgamma}\NormalTok{(quantile, }\CommentTok{\# user specified quantile}
+                 \AttributeTok{shape =}\NormalTok{ ssf.obj}\SpecialCharTok{$}\NormalTok{sl\_}\SpecialCharTok{$}\NormalTok{params}\SpecialCharTok{$}\NormalTok{shape, }\CommentTok{\# estimated from amt}
+                 \AttributeTok{scale =}\NormalTok{ ssf.obj}\SpecialCharTok{$}\NormalTok{sl\_}\SpecialCharTok{$}\NormalTok{params}\SpecialCharTok{$}\NormalTok{scale) }\CommentTok{\# estimated from amt}
+  
+  \FunctionTok{return}\NormalTok{(step)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{get-data-from-prediction-surface}{%
+\subsection{Get data from prediction
+surface}\label{get-data-from-prediction-surface}}
+
+Now that we have a valid SSF object and a prediction surface, we need to
+find our prediction cells of interest. Lets get our raster data.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{get\_cells }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(ssf.obj, mock.surface, raster, }\AttributeTok{accessory.x.preds =} \ConstantTok{NULL}\NormalTok{)\{}
+  \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{check\_ssf}\NormalTok{(ssf.obj)) }\FunctionTok{stop}\NormalTok{(}\StringTok{"Check that SSF model is valid"}\NormalTok{)}
+  
+\NormalTok{  pred.xy }\OtherTok{\textless{}{-}}\NormalTok{ raster}\SpecialCharTok{::}\FunctionTok{coordinates}\NormalTok{(mock.surface) }\CommentTok{\# get coordinates from grid we created}
+  
+\NormalTok{  predict.data }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(pred.xy, raster}\SpecialCharTok{::}\FunctionTok{extract}\NormalTok{(raster, pred.xy, }\AttributeTok{df=}\ConstantTok{TRUE}\NormalTok{))) }\CommentTok{\# makes raster values a data frame}
+  
+\NormalTok{  predict.data}\SpecialCharTok{$}\NormalTok{step\_id\_unique }\OtherTok{=}\NormalTok{ ssf.obj}\SpecialCharTok{$}\NormalTok{model}\SpecialCharTok{$}\NormalTok{xlevels}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{strata(step\_id\_)}\StringTok{\textasciigrave{}}\NormalTok{[}\DecValTok{1}\NormalTok{] }\CommentTok{\# fix the strata to something reasonable}
+  
+  \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.null}\NormalTok{(accessory.x.preds)) \{}
+\NormalTok{    predict.data }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(predict.data, accessory.x.preds) }\CommentTok{\# this adds extraneous x values that are not in matrix}
+\NormalTok{  \}}
+  
+\NormalTok{  cells }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(pred.xy) }\CommentTok{\# number of cells}
+  
+\NormalTok{  predict.data}\SpecialCharTok{$}\NormalTok{cellnr }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\NormalTok{cells }\CommentTok{\# assign cell numbers, redundant of ID}
+  
+  \FunctionTok{return}\NormalTok{(predict.data)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{check-possible-prediction-surfaces}{%
+\subsection{Check possible prediction
+surfaces}\label{check-possible-prediction-surfaces}}
+
+Not all combinations of parameter space are valid, and we often are
+missing raster data at edges
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{get\_cell\_data }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(ssf.obj, pred.data)\{}
+  \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{check\_ssf}\NormalTok{(ssf.obj)) }\FunctionTok{stop}\NormalTok{(}\StringTok{"Check that SSF model is valid"}\NormalTok{)}
+  
+\NormalTok{  cells }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(pred.data) }\CommentTok{\# number of cells}
+  
+  \CommentTok{\# relying on amt step{-}selection models, we can predict log{-}RSS}
+  \CommentTok{\# there are better ways to predict, but this is simple}
+\NormalTok{  log.rss }\OtherTok{\textless{}{-}}\NormalTok{ amt}\SpecialCharTok{::}\FunctionTok{log\_rss}\NormalTok{(ssf.obj, }\CommentTok{\# the model}
+\NormalTok{                          pred.data, }\CommentTok{\# the raster data (including missing values)}
+\NormalTok{                          pred.data }\SpecialCharTok{\%\textgreater{}\%} 
+                            \FunctionTok{drop\_na}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} 
+                            \FunctionTok{sample\_n}\NormalTok{(}\DecValTok{1}\NormalTok{),  }\CommentTok{\# a row of the raster data (excluding missing values)}
+                          \AttributeTok{ci =} \ConstantTok{NA}\NormalTok{) }
+  
+\NormalTok{  full.raster.data }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(pred.data, }\AttributeTok{lRSS =}\NormalTok{ log.rss}\SpecialCharTok{$}\NormalTok{df}\SpecialCharTok{$}\NormalTok{log\_rss) }\CommentTok{\# bind predictions to the original data}
+  
+  \FunctionTok{return}\NormalTok{(full.raster.data)}
+  
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{we-need-a-quick-way-to-find-values-for-comparison}{%
+\subsection{We need a quick way to find values for
+comparison}\label{we-need-a-quick-way-to-find-values-for-comparison}}
+
+We need to find neighbors of cells in our matrix. This is easy, but
+could require n\^{}3 comparisons. So many comparisons are
+computationally inefficient. One thing we can rely on is that all cells
+in a raster (or matrix) can be indexed. Additionally, distances between
+cells in a raster are repetitive. In general, there are only
+\textasciitilde0.2\% unique pairwise distances between cell indices. We
+can find these unique distances because we know the difference in index
+of the comparisons, the column identify of the minimum index, and the
+observed distance. This allows us to have a table that we can call
+repetitively instead of recalculating millions of distances.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{neighbor\_lookup }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(mock.surface, cell.data, }\AttributeTok{cell.data.list =} \ConstantTok{NULL}\NormalTok{)\{}
+\NormalTok{  cols }\OtherTok{\textless{}{-}}\NormalTok{ mock.surface}\SpecialCharTok{@}\NormalTok{ncols }\CommentTok{\# columns in prediction}
+\NormalTok{  rows }\OtherTok{\textless{}{-}}\NormalTok{ mock.surface}\SpecialCharTok{@}\NormalTok{nrows }\CommentTok{\# rows in prediction}
+\NormalTok{  cells }\OtherTok{\textless{}{-}}\NormalTok{ cols}\SpecialCharTok{*}\NormalTok{rows }\CommentTok{\# number of cells}
+\NormalTok{  index }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\NormalTok{cells }\CommentTok{\# all index values in our prediction raster}
+  
+  \CommentTok{\# create a matrix for each column in the first row and its comparisons to distance to all other cells }
+  
+  \ControlFlowTok{if}\NormalTok{(}\FunctionTok{is.null}\NormalTok{(cell.data.list))\{}
+    \FunctionTok{print}\NormalTok{(}\StringTok{"Splitting cell.data into list"}\NormalTok{)}
+\NormalTok{    cell.data.list }\OtherTok{\textless{}{-}} \FunctionTok{split}\NormalTok{(cell.data, cell.data}\SpecialCharTok{$}\NormalTok{cellnr) }\CommentTok{\# split the prediction data into row{-}wise lists to use lapply}
+\NormalTok{  \}}
+  
+  \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.null}\NormalTok{(cell.data.list))\{}
+    \FunctionTok{print}\NormalTok{(}\StringTok{"Using inputted list of cell data"}\NormalTok{)}
+\NormalTok{    cell.data.list }\OtherTok{\textless{}{-}}\NormalTok{ cell.data.list }\CommentTok{\# split the prediction data into row{-}wise lists to use lapply}
+\NormalTok{  \}}
+    
+  \CommentTok{\# this is a progress bar we can use in a for loop}
+\NormalTok{  pb }\OtherTok{\textless{}{-}}\NormalTok{ progress\_bar}\SpecialCharTok{$}\FunctionTok{new}\NormalTok{(}\AttributeTok{format =} \StringTok{"(:spin) [:bar] :percent [Elapsed time: :elapsedfull || Estimated time remaining: :eta]"}\NormalTok{, }\AttributeTok{total =}\NormalTok{ cols, }\AttributeTok{complete =} \StringTok{"="}\NormalTok{, }\AttributeTok{incomplete =} \StringTok{"{-}"}\NormalTok{, }\AttributeTok{current =} \StringTok{"\textgreater{}"}\NormalTok{, }\AttributeTok{clear =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{width =} \DecValTok{100}\NormalTok{)}
+  
+  \ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{cols) \{ }\CommentTok{\# step through columns}
+\NormalTok{    dist }\OtherTok{\textless{}{-}} \FunctionTok{pointDistance}\NormalTok{(cell.data[i,}\FunctionTok{c}\NormalTok{(}\StringTok{"x"}\NormalTok{,}\StringTok{"y"}\NormalTok{)], }\CommentTok{\# choose the first row cell by column (raster indices are row{-}wise)}
+\NormalTok{                            cell.data[i}\SpecialCharTok{:}\NormalTok{cells,}\FunctionTok{c}\NormalTok{(}\StringTok{"x"}\NormalTok{,}\StringTok{"y"}\NormalTok{)], }\CommentTok{\# choose all other cells}
+                            \AttributeTok{lonlat =}\NormalTok{ F) }\CommentTok{\# we are using UTM }
+    \ControlFlowTok{if}\NormalTok{(i }\SpecialCharTok{==} \DecValTok{1}\NormalTok{) mat.dist }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(dist, }\AttributeTok{ncol =} \DecValTok{1}\NormalTok{)}
+    \ControlFlowTok{if}\NormalTok{(i }\SpecialCharTok{\textgreater{}} \DecValTok{1}\NormalTok{) mat.dist }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(mat.dist, }\FunctionTok{c}\NormalTok{(dist, }\FunctionTok{rep}\NormalTok{(}\ConstantTok{NA}\NormalTok{, i}\DecValTok{{-}1}\NormalTok{))) }\CommentTok{\# for each additional column, there are i{-}1 comparisons that are repeated (unnecessary)}
+\NormalTok{    pb}\SpecialCharTok{$}\FunctionTok{tick}\NormalTok{() }\CommentTok{\# for progress bar}
+\NormalTok{  \}}
+  
+  \FunctionTok{return}\NormalTok{(mat.dist)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{find-neighbors-within-distance}{%
+\subsection{Find neighbors within
+distance}\label{find-neighbors-within-distance}}
+
+Now that we have our call-up table, we can use it to generate neighbors.
+This is arguably one of the most taxing (computationally) steps of the
+whole process. Luckily im a damn genius and found ways to make this even
+faster than the call-up table.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{neighbor\_finder }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(}\AttributeTok{ssf.obj =}\NormalTok{ m2, cell.data, neighbors.found, }\AttributeTok{quantile =} \FloatTok{0.99}\NormalTok{, }\AttributeTok{cell.data.list =} \ConstantTok{NULL}\NormalTok{)\{}
+  
+\NormalTok{  neighborhood.distance }\OtherTok{\textless{}{-}} \FunctionTok{step\_distance}\NormalTok{(ssf.obj, quantile) }\CommentTok{\# take the X\% step distance as your neighborhood }
+  
+\NormalTok{  cols }\OtherTok{\textless{}{-}} \FunctionTok{ncol}\NormalTok{(neighbors.found) }\CommentTok{\# columns of our call{-}up table}
+\NormalTok{  differences }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(neighbors.found) }\CommentTok{\# number of differences in index values }
+  
+  \FunctionTok{print}\NormalTok{(}\StringTok{"Creating neighbor comparisons"}\NormalTok{)}
+\NormalTok{  vector }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(neighbors.found) }\CommentTok{\# convert the neighbors to a vector we can index later, this is the purpose of all those NA\textquotesingle{}s earlier based on i{-}1 unique distances}
+  
+  \FunctionTok{print}\NormalTok{(}\StringTok{"Finding valid comparisons"}\NormalTok{)}
+\NormalTok{  valid }\OtherTok{\textless{}{-}}\NormalTok{ vector }\SpecialCharTok{\textless{}}\NormalTok{ neighborhood.distance }\CommentTok{\# T/F whether those neighborhood distances are less than our threshold}
+  
+  \ControlFlowTok{if}\NormalTok{(}\FunctionTok{is.null}\NormalTok{(cell.data.list))\{}
+    \FunctionTok{print}\NormalTok{(}\StringTok{"Splitting cell.data into list"}\NormalTok{)}
+\NormalTok{    cell.data.list }\OtherTok{\textless{}{-}} \FunctionTok{split}\NormalTok{(cell.data, cell.data}\SpecialCharTok{$}\NormalTok{cellnr) }\CommentTok{\# split the prediction data into row{-}wise lists to use lapply}
+\NormalTok{  \}}
+  
+  \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.null}\NormalTok{(cell.data.list))\{}
+    \FunctionTok{print}\NormalTok{(}\StringTok{"Using inputted list of cell data"}\NormalTok{)}
+\NormalTok{    cell.data.list }\OtherTok{\textless{}{-}}\NormalTok{ cell.data.list }\CommentTok{\# split the prediction data into row{-}wise lists to use lapply}
+\NormalTok{  \}}
+  
+  \FunctionTok{print}\NormalTok{(}\StringTok{"Running comparisons"}\NormalTok{)}
+\NormalTok{  neighbor.mat }\OtherTok{\textless{}{-}} \FunctionTok{pblapply}\NormalTok{(cell.data.list, }\ControlFlowTok{function}\NormalTok{(x)\{ }\CommentTok{\# step through each row (see list split above)}
+\NormalTok{    focal }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(x}\SpecialCharTok{$}\NormalTok{cellnr) }\CommentTok{\# value of row cell number }
+\NormalTok{    delta }\OtherTok{\textless{}{-}} \FunctionTok{abs}\NormalTok{(focal }\SpecialCharTok{{-}}\NormalTok{ cell.data}\SpecialCharTok{$}\NormalTok{cellnr) }\CommentTok{\# difference in row cell number vs all others}
+\NormalTok{    index }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(focal }\SpecialCharTok{\textless{}}\NormalTok{ cell.data}\SpecialCharTok{$}\NormalTok{cellnr, focal, cell.data}\SpecialCharTok{$}\NormalTok{cellnr) }\CommentTok{\# report the minimum cell index (based on our call{-}up structure)}
+    
+\NormalTok{    index.col }\OtherTok{\textless{}{-}}\NormalTok{ index}\SpecialCharTok{\%\%}\NormalTok{cols }\CommentTok{\# use the remainder function to get the column number (see below, we have to force zeros to the column number because the remainder of the final column is zero)}
+    
+\NormalTok{    df }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{difference =}\NormalTok{ delta }\SpecialCharTok{+} \DecValTok{1}\NormalTok{, }\CommentTok{\# we have to add one because differences of 0 are stored in row 1, differences of 1 in row 2, etc. }
+                     \AttributeTok{col =} \FunctionTok{ifelse}\NormalTok{(index.col }\SpecialCharTok{==} \DecValTok{0}\NormalTok{, cols, index.col), }\CommentTok{\# forcing remainders of zero the number of columns}
+                     \AttributeTok{cell.nr =}\NormalTok{ cell.data}\SpecialCharTok{$}\NormalTok{cellnr) }\CommentTok{\# just tracking the cell number we are comparing against for use later}
+    
+    \CommentTok{\# filter the data frame based on whether our call{-}up values are less than the neighborhood}
+\NormalTok{    df }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{\%\textgreater{}\%} 
+      \FunctionTok{filter}\NormalTok{(valid[difference}\SpecialCharTok{+}\NormalTok{((col}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{*}\NormalTok{differences)]) }
+    
+    \CommentTok{\# filter the data set to unique rows and columns for call{-}up (to accommodate memory issues)}
+\NormalTok{    df.distinct }\OtherTok{\textless{}{-}}\NormalTok{ df }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{distinct}\NormalTok{(difference, col) }
+    
+    \CommentTok{\# find the unique distances (trims time down)}
+\NormalTok{    df.distinct}\SpecialCharTok{$}\NormalTok{distances }\OtherTok{\textless{}{-}}\NormalTok{ vector[df.distinct}\SpecialCharTok{$}\NormalTok{difference }\SpecialCharTok{+}\NormalTok{ ((df.distinct}\SpecialCharTok{$}\NormalTok{col }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{)}\SpecialCharTok{*}\NormalTok{differences)]}
+    
+    \CommentTok{\# throw the unique distances back to the full data set }
+\NormalTok{    df }\OtherTok{\textless{}{-}} \FunctionTok{merge}\NormalTok{(df, df.distinct, }\AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"difference"}\NormalTok{,}\StringTok{"col"}\NormalTok{))}
+    
+    \CommentTok{\# package into a nice data frame for export}
+    \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{row =}\NormalTok{ focal, }\AttributeTok{column =}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{cell.nr, }\AttributeTok{distance =}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{distances)}
+\NormalTok{  \})}
+  
+  \CommentTok{\# bind the output list}
+\NormalTok{  neighbors }\OtherTok{\textless{}{-}} \FunctionTok{rbindlist}\NormalTok{(neighbor.mat)}
+  
+  \CommentTok{\# create a sparse matrix based on the focal id, alternate id, and distance}
+\NormalTok{  sparse.neighbors }\OtherTok{\textless{}{-}} \FunctionTok{sparseMatrix}\NormalTok{(}\AttributeTok{i =}\NormalTok{ neighbors}\SpecialCharTok{$}\NormalTok{row, }\AttributeTok{j =}\NormalTok{ neighbors}\SpecialCharTok{$}\NormalTok{column, }\AttributeTok{x =}\NormalTok{ neighbors}\SpecialCharTok{$}\NormalTok{distance)}
+  
+  \CommentTok{\# return both the matrix and the unbound list of neighbor cells}
+  \FunctionTok{return}\NormalTok{(}\FunctionTok{list}\NormalTok{(}\AttributeTok{matrix =}\NormalTok{ sparse.neighbors, }\AttributeTok{by.cell =}\NormalTok{ neighbor.mat))}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{we-need-to-split-data-into-focal-and-neighbor-groups}{%
+\subsection{We need to split data into focal and neighbor
+groups}\label{we-need-to-split-data-into-focal-and-neighbor-groups}}
+
+Now that we have data divided so that we know the neighbors of a focal
+cell, we can split the data into a format that is conducive to SSF
+predictions. We split these into two data frames, \texttt{.given} for
+the focal cell and \texttt{.for} for the neighboring cells.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{compile\_ssf\_comparisons }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(sparse.neighbors, cell.data) \{}
+  
+  \CommentTok{\# this is why the export of the neighbors as individual lists was important}
+\NormalTok{  ssf.comparisons }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(sparse.neighbors}\SpecialCharTok{$}\NormalTok{by.cell, }\ControlFlowTok{function}\NormalTok{(x)\{ }
+    
+\NormalTok{    baseline }\OtherTok{\textless{}{-}}\NormalTok{ cell.data[x}\SpecialCharTok{$}\NormalTok{column[}\FunctionTok{which}\NormalTok{(x}\SpecialCharTok{$}\NormalTok{distance }\SpecialCharTok{==} \DecValTok{0}\NormalTok{)],] }\CommentTok{\# baseline will have a distance of zero (focal)}
+    
+\NormalTok{    baseline}\SpecialCharTok{$}\NormalTok{step }\OtherTok{\textless{}{-}} \DecValTok{0} \CommentTok{\# create a variable "step" that records this zero distance}
+    
+\NormalTok{    alternate }\OtherTok{\textless{}{-}}\NormalTok{ cell.data[x}\SpecialCharTok{$}\NormalTok{column,] }\CommentTok{\# grab all the other cell.data for neighboring cells (including focal cell)}
+    
+\NormalTok{    alternate}\SpecialCharTok{$}\NormalTok{step }\OtherTok{\textless{}{-}}\NormalTok{ x}\SpecialCharTok{$}\NormalTok{distance }\CommentTok{\# force distance to this new variable step}
+    
+    \FunctionTok{list}\NormalTok{(}\AttributeTok{.given =}\NormalTok{ baseline, }\AttributeTok{.for =}\NormalTok{ alternate) }\CommentTok{\# return a list of focal and neigboring cell data}
+    
+\NormalTok{  \})}
+  
+  \FunctionTok{return}\NormalTok{(ssf.comparisons)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{now-we-need-to-predict-our-surface}{%
+\subsection{Now we need to predict our
+surface}\label{now-we-need-to-predict-our-surface}}
+
+Using our fit movement model and the metadata for our prediction
+surface, we can estimate the relative risk of selecting the focal cell
+and all other cells in the neighborhood. We can show that all
+probabilities of ``choosing'' a cell in the prediction surface must sum
+to one, thus the probability of selecting the focal cell is the inverse
+of he sum of all relative probabilites. From log-RSS, we just
+exponentiate, and take the inverse sum. To find the probability of
+choosing all cells, we just multiply the probability of selecting the
+focal cell against all relative risks! Easy! This tells us the
+probability of selecting each of those cells given the comparison to the
+focal cell, so not the out-right probability of selection, but it gets
+us closer.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{predict\_ssf\_comparisons }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(}\AttributeTok{ssf.obj =}\NormalTok{ m2, ssf.comparisons) \{}
+  
+  \FunctionTok{print}\NormalTok{(}\StringTok{"Estimating probability surface"}\NormalTok{)}
+  
+\NormalTok{  prediction.list }\OtherTok{\textless{}{-}} \FunctionTok{pbmclapply}\NormalTok{(ssf.comparisons, }\ControlFlowTok{function}\NormalTok{(x)\{ }\CommentTok{\# step through the list of SSF objects}
+\NormalTok{    log.rss }\OtherTok{\textless{}{-}} \FunctionTok{log\_rss}\NormalTok{(ssf.obj, x}\SpecialCharTok{$}\NormalTok{.for, x}\SpecialCharTok{$}\NormalTok{.given, }\AttributeTok{ci =} \ConstantTok{NA}\NormalTok{) }\CommentTok{\# get the log{-}RSS for each comparison}
+\NormalTok{    x}\SpecialCharTok{$}\NormalTok{.for}\SpecialCharTok{$}\NormalTok{Prob }\OtherTok{\textless{}{-}} \FunctionTok{exp}\NormalTok{(log.rss}\SpecialCharTok{$}\NormalTok{df}\SpecialCharTok{$}\NormalTok{log\_rss)}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\FunctionTok{sum}\NormalTok{(}\FunctionTok{exp}\NormalTok{(log.rss}\SpecialCharTok{$}\NormalTok{df}\SpecialCharTok{$}\NormalTok{log\_rss))) }\CommentTok{\# exponentiate and multiply agains relative risk}
+\NormalTok{    x}\SpecialCharTok{$}\NormalTok{.for }\CommentTok{\# return the data frame with probabilities}
+\NormalTok{  \})}
+  
+  \FunctionTok{print}\NormalTok{(}\StringTok{"Compiling probability surface"}\NormalTok{)}
+  
+  \ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(prediction.list))\{}
+\NormalTok{    prediction.list[[i]]}\SpecialCharTok{$}\NormalTok{focal.cell }\OtherTok{\textless{}{-}}\NormalTok{ i }\CommentTok{\# specify the focal cell for each comparison}
+\NormalTok{  \} }
+  
+  \FunctionTok{print}\NormalTok{(}\StringTok{"Making sparse matrix for transitions"}\NormalTok{)}
+\NormalTok{  bound }\OtherTok{\textless{}{-}} \FunctionTok{rbindlist}\NormalTok{(prediction.list) }\CommentTok{\# bind all data frames }
+  
+  \CommentTok{\# use indexing to make a massive sparse matrix quickly }
+\NormalTok{  Sparse.Matrix }\OtherTok{\textless{}{-}} \FunctionTok{sparseMatrix}\NormalTok{(bound}\SpecialCharTok{$}\NormalTok{focal.cell, bound}\SpecialCharTok{$}\NormalTok{cellnr, }\AttributeTok{x =}\NormalTok{ bound}\SpecialCharTok{$}\NormalTok{Prob) }
+  
+  \CommentTok{\# return the prediction list and sparse matrix}
+  \FunctionTok{return}\NormalTok{(}\FunctionTok{list}\NormalTok{(}\AttributeTok{prob.surface =}\NormalTok{ prediction.list, }\AttributeTok{sparse.matrix =}\NormalTok{ Sparse.Matrix))  }
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{package-applications}{%
+\section{Package applications(?)}\label{package-applications}}
+
+\hypertarget{deer}{%
+\subsection{Deer}\label{deer}}
+
+This is a demonstration data set from the amt package. Single deer from
+Northern Europe and a binary forest layer as a covariate.
+
+\hypertarget{data}{%
+\subsubsection{Data}\label{data}}
+
+We read in data, create 15 random steps for each real step, and then
+store forest as a factor, turning angle as cosine(ta) and step length as
+log plus 1 (this saves us later when we compare to a focal cell with
+``0'' step distance)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{data}\NormalTok{(}\StringTok{"deer"}\NormalTok{)}
+\FunctionTok{data}\NormalTok{(}\StringTok{"sh\_forest"}\NormalTok{)}
+\NormalTok{ssf1 }\OtherTok{\textless{}{-}}\NormalTok{ deer }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{steps\_by\_burst}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{random\_steps}\NormalTok{(}\AttributeTok{n\_control =} \DecValTok{15}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{extract\_covariates}\NormalTok{(sh\_forest) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{sh.forest =} \FunctionTok{factor}\NormalTok{(sh.forest),}
+         \AttributeTok{cos\_ta =} \FunctionTok{cos}\NormalTok{(ta\_),}
+         \AttributeTok{log\_sl =} \FunctionTok{log}\NormalTok{(sl\_}\SpecialCharTok{+}\DecValTok{1}\NormalTok{))}
+
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{(sh\_forest}\DecValTok{{-}1}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(ssf1)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Untitled_files/figure-latex/unnamed-chunk-11-1.pdf}
+
+\hypertarget{model}{%
+\subsubsection{Model}\label{model}}
+
+We can fit a basic movement model; it appears that a forest:step
+interaction is favored.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m2 }\OtherTok{\textless{}{-}}\NormalTok{ ssf1 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(cos\_ta)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{fit\_clogit}\NormalTok{(case\_ }\SpecialCharTok{\textasciitilde{}}\NormalTok{ sh.forest }\SpecialCharTok{*} \FunctionTok{poly}\NormalTok{(log\_sl,}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{strata}\NormalTok{(step\_id\_), }\AttributeTok{model =}\NormalTok{ T)}
+\FunctionTok{summary}\NormalTok{(m2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Call:
+## coxph(formula = Surv(rep(1, 12624L), case_) ~ sh.forest * poly(log_sl, 
+##     2) + strata(step_id_), data = data, model = ..1, method = "exact")
+## 
+##   n= 12624, number of events= 759 
+## 
+##                                   coef  exp(coef)   se(coef)      z Pr(>|z|)
+## sh.forest2                  -4.371e-01  6.459e-01  1.103e-01 -3.962 7.44e-05
+## poly(log_sl, 2)1             2.720e+01  6.475e+11  8.051e+00  3.378  0.00073
+## poly(log_sl, 2)2             7.680e+00  2.165e+03  8.010e+00  0.959  0.33761
+## sh.forest2:poly(log_sl, 2)1 -4.020e+01  3.468e-18  9.872e+00 -4.072 4.65e-05
+## sh.forest2:poly(log_sl, 2)2 -3.018e+01  7.806e-14  9.974e+00 -3.026  0.00248
+##                                
+## sh.forest2                  ***
+## poly(log_sl, 2)1            ***
+## poly(log_sl, 2)2               
+## sh.forest2:poly(log_sl, 2)1 ***
+## sh.forest2:poly(log_sl, 2)2 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+##                             exp(coef) exp(-coef) lower .95 upper .95
+## sh.forest2                  6.459e-01  1.548e+00 5.203e-01 8.018e-01
+## poly(log_sl, 2)1            6.475e+11  1.544e-12 9.084e+04 4.616e+18
+## poly(log_sl, 2)2            2.165e+03  4.618e-04 3.295e-04 1.423e+10
+## sh.forest2:poly(log_sl, 2)1 3.468e-18  2.883e+17 1.371e-26 8.770e-10
+## sh.forest2:poly(log_sl, 2)2 7.806e-14  1.281e+13 2.528e-22 2.410e-05
+## 
+## Concordance= 0.59  (se = 0.012 )
+## Likelihood ratio test= 54.31  on 5 df,   p=2e-10
+## Wald test            = 53.28  on 5 df,   p=3e-10
+## Score (logrank) test = 54.73  on 5 df,   p=1e-10
+\end{verbatim}
+
+\hypertarget{surface}{%
+\subsubsection{Surface}\label{surface}}
+
+We can make our surface for predictions - rememeber, we set initial
+values to their cell index number.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mock.surface }\OtherTok{\textless{}{-}} \FunctionTok{create\_mock\_surface}\NormalTok{(sh\_forest, F, }\FunctionTok{list}\NormalTok{(}\AttributeTok{x =} \DecValTok{250}\NormalTok{, }\AttributeTok{y =} \DecValTok{250}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(mock.surface)}
+\FunctionTok{lines}\NormalTok{(deer)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Untitled_files/figure-latex/unnamed-chunk-13-1.pdf}
+
+\hypertarget{getting-cell-data}{%
+\subsubsection{Getting cell data}\label{getting-cell-data}}
+
+We can get our prediction data. We can set forest to a factor again to
+get the model predictions to work.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pred.data }\OtherTok{\textless{}{-}} \FunctionTok{get\_cells}\NormalTok{(m2, }
+\NormalTok{                       mock.surface,}
+\NormalTok{                       sh\_forest, }
+                       \AttributeTok{accessory.x.preds =} \FunctionTok{list}\NormalTok{(}\AttributeTok{log\_sl =} \FunctionTok{log}\NormalTok{(}\FunctionTok{step\_distance}\NormalTok{(m2, }\FloatTok{0.5}\NormalTok{)), }
+                                                \AttributeTok{cos\_ta =} \DecValTok{1}\NormalTok{))}
+
+\NormalTok{pred.data}\SpecialCharTok{$}\NormalTok{sh.forest }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(pred.data}\SpecialCharTok{$}\NormalTok{sh.forest)}
+\FunctionTok{head}\NormalTok{(pred.data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         x       y ID sh.forest step_id_unique   log_sl cos_ta cellnr
+## 1 4304850 3455600  1         1     step_id_=1 5.413297      1      1
+## 2 4305100 3455600  2         2     step_id_=1 5.413297      1      2
+## 3 4305351 3455600  3         2     step_id_=1 5.413297      1      3
+## 4 4305601 3455600  4         2     step_id_=1 5.413297      1      4
+## 5 4305852 3455600  5         2     step_id_=1 5.413297      1      5
+## 6 4306102 3455600  6         2     step_id_=1 5.413297      1      6
+\end{verbatim}
+
+\hypertarget{testing-surface}{%
+\subsubsection{Testing surface}\label{testing-surface}}
+
+We can fit our original SSF sensu other publications, where a baseline
+is chosen and run with. It looks like a RSF, but is it?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cell.data }\OtherTok{\textless{}{-}} \FunctionTok{get\_cell\_data}\NormalTok{(m2, pred.data)}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, cell.data}\SpecialCharTok{$}\NormalTok{lRSS))}
+\FunctionTok{points}\NormalTok{(deer, }\AttributeTok{pch =} \StringTok{"."}\NormalTok{, }\AttributeTok{col =} \FunctionTok{alpha}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\FloatTok{0.5}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Untitled_files/figure-latex/unnamed-chunk-15-1.pdf}
+
+\hypertarget{finding-neighbors}{%
+\subsubsection{Finding neighbors}\label{finding-neighbors}}
+
+Lets make our neighbor look-up matrix. We can plot it here as a raster,
+but its shows the general idea.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{neighbors.found }\OtherTok{\textless{}{-}} \FunctionTok{neighbor\_lookup}\NormalTok{(mock.surface, cell.data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Splitting cell.data into list"
+## [1] "Using inputted list of cell data"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{raster}\NormalTok{(neighbors.found))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Untitled_files/figure-latex/unnamed-chunk-16-1.pdf}
+
+\hypertarget{making-neighbor-comparisons}{%
+\subsubsection{Making neighbor
+comparisons}\label{making-neighbor-comparisons}}
+
+We can use our look-up matrix to find all of our neighbors. Here, we can
+see a few examples of how this works.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sparse.neighbors }\OtherTok{\textless{}{-}} \FunctionTok{neighbor\_finder}\NormalTok{(m2, cell.data, neighbors.found, }\AttributeTok{quantile =} \FloatTok{0.99}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Creating neighbor comparisons"
+## [1] "Finding valid comparisons"
+## [1] "Splitting cell.data into list"
+## [1] "Using inputted list of cell data"
+## [1] "Running comparisons"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, sparse.neighbors}\SpecialCharTok{$}\NormalTok{matrix[}\FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(sparse.neighbors}\SpecialCharTok{$}\NormalTok{matrix), }\DecValTok{1}\NormalTok{),]))}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, sparse.neighbors}\SpecialCharTok{$}\NormalTok{matrix[}\FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(sparse.neighbors}\SpecialCharTok{$}\NormalTok{matrix), }\DecValTok{1}\NormalTok{),]))}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, sparse.neighbors}\SpecialCharTok{$}\NormalTok{matrix[}\FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(sparse.neighbors}\SpecialCharTok{$}\NormalTok{matrix), }\DecValTok{1}\NormalTok{),]))}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, sparse.neighbors}\SpecialCharTok{$}\NormalTok{matrix[}\FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(sparse.neighbors}\SpecialCharTok{$}\NormalTok{matrix), }\DecValTok{1}\NormalTok{),]))}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, sparse.neighbors}\SpecialCharTok{$}\NormalTok{matrix[}\FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(sparse.neighbors}\SpecialCharTok{$}\NormalTok{matrix), }\DecValTok{1}\NormalTok{),]))}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, sparse.neighbors}\SpecialCharTok{$}\NormalTok{matrix[}\FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(sparse.neighbors}\SpecialCharTok{$}\NormalTok{matrix), }\DecValTok{1}\NormalTok{),]))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Untitled_files/figure-latex/unnamed-chunk-17-1.pdf}
+
+\hypertarget{compiling-ssf-comparisons}{%
+\subsubsection{Compiling SSF
+comparisons}\label{compiling-ssf-comparisons}}
+
+We can create all the comparisons between focal and non-focal cells. We
+need to add some extraneous things like creating our \texttt{log\_sl}
+and \texttt{cos\_ta} values. Again, log plus one for all the step
+lengths to accommodate zeros. Functionally, our specification of turning
+angle is BS, but it shouldn't affect inferences. In the future, turning
+angle could be estimated based on the turning angle (if we wanted to get
+fancy).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ssf.comparisons }\OtherTok{\textless{}{-}} \FunctionTok{compile\_ssf\_comparisons}\NormalTok{(sparse.neighbors, cell.data)}
+
+\NormalTok{ssf.comparisons }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(ssf.comparisons, }\ControlFlowTok{function}\NormalTok{(x) \{}
+\NormalTok{  x}\SpecialCharTok{$}\NormalTok{.for}\SpecialCharTok{$}\NormalTok{log\_sl }\OtherTok{\textless{}{-}} \FunctionTok{log}\NormalTok{(x}\SpecialCharTok{$}\NormalTok{.for}\SpecialCharTok{$}\NormalTok{step}\SpecialCharTok{+}\DecValTok{1}\NormalTok{)}
+\NormalTok{  x}\SpecialCharTok{$}\NormalTok{.given}\SpecialCharTok{$}\NormalTok{log\_sl }\OtherTok{\textless{}{-}} \FunctionTok{log}\NormalTok{(x}\SpecialCharTok{$}\NormalTok{.given}\SpecialCharTok{$}\NormalTok{step}\SpecialCharTok{+}\DecValTok{1}\NormalTok{)}
+  
+\NormalTok{  x}\SpecialCharTok{$}\NormalTok{.for}\SpecialCharTok{$}\NormalTok{cos\_ta }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{  x}\SpecialCharTok{$}\NormalTok{.given}\SpecialCharTok{$}\NormalTok{cos\_ta }\OtherTok{\textless{}{-}} \DecValTok{0}
+  
+  \FunctionTok{list}\NormalTok{(}\AttributeTok{.for =}\NormalTok{ x}\SpecialCharTok{$}\NormalTok{.for, }\AttributeTok{.given =}\NormalTok{ x}\SpecialCharTok{$}\NormalTok{.given)}
+\NormalTok{\})}
+
+\FunctionTok{head}\NormalTok{(ssf.comparisons}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{1}\StringTok{\textasciigrave{}}\SpecialCharTok{$}\NormalTok{.for)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           x       y  ID sh.forest step_id_unique   log_sl cos_ta cellnr
+## 1   4304850 3455600   1         1     step_id_=1 0.000000      0      1
+## 151 4304850 3455100 151         2     step_id_=1 6.216606      0    151
+## 152 4305100 3455100 152         2     step_id_=1 6.328233      0    152
+## 153 4305351 3455100 153         2     step_id_=1 6.563261      0    153
+## 154 4305601 3455100 154         2     step_id_=1 6.805966      0    154
+## 155 4305852 3455100 155         2     step_id_=1 7.021286      0    155
+##          lRSS      step
+## 1   0.3440625    0.0000
+## 151 0.0000000  500.0000
+## 152 0.0000000  559.1661
+## 153 0.0000000  707.5783
+## 154 0.0000000  902.2200
+## 155 0.0000000 1119.2267
+\end{verbatim}
+
+\hypertarget{predicting-surface-probabilities}{%
+\subsubsection{Predicting surface
+probabilities}\label{predicting-surface-probabilities}}
+
+We can now predict our whole surface based on the transition
+probabilities between each focal and each neighbor cell. We can
+visualize some below.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surface }\OtherTok{\textless{}{-}} \FunctionTok{predict\_ssf\_comparisons}\NormalTok{(m2, ssf.comparisons)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Estimating probability surface"
+## [1] "Compiling probability surface"
+## [1] "Making sparse matrix for transitions"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{), }\AttributeTok{mai =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\DecValTok{0}\NormalTok{))}
+
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, surface}\SpecialCharTok{$}\NormalTok{sparse.matrix[}\FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(surface}\SpecialCharTok{$}\NormalTok{sparse.matrix), }\DecValTok{1}\NormalTok{),]))}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, surface}\SpecialCharTok{$}\NormalTok{sparse.matrix[}\FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(surface}\SpecialCharTok{$}\NormalTok{sparse.matrix), }\DecValTok{1}\NormalTok{),]))}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, surface}\SpecialCharTok{$}\NormalTok{sparse.matrix[}\FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(surface}\SpecialCharTok{$}\NormalTok{sparse.matrix), }\DecValTok{1}\NormalTok{),]))}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, surface}\SpecialCharTok{$}\NormalTok{sparse.matrix[}\FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(surface}\SpecialCharTok{$}\NormalTok{sparse.matrix), }\DecValTok{1}\NormalTok{),]))}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, surface}\SpecialCharTok{$}\NormalTok{sparse.matrix[}\FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(surface}\SpecialCharTok{$}\NormalTok{sparse.matrix), }\DecValTok{1}\NormalTok{),]))}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, surface}\SpecialCharTok{$}\NormalTok{sparse.matrix[}\FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(surface}\SpecialCharTok{$}\NormalTok{sparse.matrix), }\DecValTok{1}\NormalTok{),]))}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, surface}\SpecialCharTok{$}\NormalTok{sparse.matrix[}\FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(surface}\SpecialCharTok{$}\NormalTok{sparse.matrix), }\DecValTok{1}\NormalTok{),]))}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, surface}\SpecialCharTok{$}\NormalTok{sparse.matrix[}\FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(surface}\SpecialCharTok{$}\NormalTok{sparse.matrix), }\DecValTok{1}\NormalTok{),]))}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, surface}\SpecialCharTok{$}\NormalTok{sparse.matrix[}\FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(surface}\SpecialCharTok{$}\NormalTok{sparse.matrix), }\DecValTok{1}\NormalTok{),]))}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, surface}\SpecialCharTok{$}\NormalTok{sparse.matrix[}\FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(surface}\SpecialCharTok{$}\NormalTok{sparse.matrix), }\DecValTok{1}\NormalTok{),]))}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, surface}\SpecialCharTok{$}\NormalTok{sparse.matrix[}\FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(surface}\SpecialCharTok{$}\NormalTok{sparse.matrix), }\DecValTok{1}\NormalTok{),]))}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, surface}\SpecialCharTok{$}\NormalTok{sparse.matrix[}\FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(surface}\SpecialCharTok{$}\NormalTok{sparse.matrix), }\DecValTok{1}\NormalTok{),]))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Untitled_files/figure-latex/unnamed-chunk-19-1.pdf}
+
+\hypertarget{making-graph}{%
+\subsubsection{Making graph}\label{making-graph}}
+
+We can use these relationships to make a graph. We will trim any NA
+nodes and edges, but we should record their identity for mapping back to
+the prediction surface. This graph is absolutely huge, so it not really
+legible and is not plotted here.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{g }\OtherTok{\textless{}{-}} \FunctionTok{graph\_from\_adjacency\_matrix}\NormalTok{(surface}\SpecialCharTok{$}\NormalTok{sparse.matrix, }\AttributeTok{mode =} \StringTok{"directed"}\NormalTok{, }\AttributeTok{weighted =}\NormalTok{ T, }\AttributeTok{diag =}\NormalTok{ T)}
+\FunctionTok{V}\NormalTok{(g)}\SpecialCharTok{$}\NormalTok{name }\OtherTok{\textless{}{-}} \FunctionTok{V}\NormalTok{(g)}
+\NormalTok{Isolated }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(}\FunctionTok{degree}\NormalTok{(g)}\SpecialCharTok{==}\DecValTok{0}\NormalTok{)}
+\NormalTok{Connected }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(}\FunctionTok{degree}\NormalTok{(g)}\SpecialCharTok{\textgreater{}}\DecValTok{0}\NormalTok{)}
+\NormalTok{g }\OtherTok{\textless{}{-}} \FunctionTok{delete.vertices}\NormalTok{(g, Isolated)}
+\NormalTok{g }\OtherTok{\textless{}{-}} \FunctionTok{delete.edges}\NormalTok{(g, }\FunctionTok{E}\NormalTok{(g)[}\FunctionTok{is.na}\NormalTok{(weight)])}
+\CommentTok{\# plot(g)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{calculating-centrality}{%
+\subsubsection{Calculating centrality}\label{calculating-centrality}}
+
+We can calculate PageRank centrality, which is arguably the closest
+thing to an RSF-like definition. As you can see, its different than the
+above RSS surface.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pg }\OtherTok{\textless{}{-}} \FunctionTok{page\_rank}\NormalTok{(g)}
+\NormalTok{page.rank.raster }\OtherTok{\textless{}{-}} \FunctionTok{setValues}\NormalTok{(mock.surface, pg}\SpecialCharTok{$}\NormalTok{vect)}
+\FunctionTok{plot}\NormalTok{(page.rank.raster)}
+\FunctionTok{points}\NormalTok{(deer, }\AttributeTok{pch =} \StringTok{"."}\NormalTok{, }\AttributeTok{col =} \FunctionTok{alpha}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\FloatTok{0.25}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Untitled_files/figure-latex/unnamed-chunk-21-1.pdf}
+
+\hypertarget{calculating-other-information-for-comparison}{%
+\subsubsection{Calculating other information for
+comparison}\label{calculating-other-information-for-comparison}}
+
+We can also calculate other things, like the sum of all probabilities
+favoring a cell across all pertinent neighbors. Or the diagonal of our
+transition matrix, which is the probability of selecting a focal cell
+given the neighborhood.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{diag }\OtherTok{\textless{}{-}} \FunctionTok{diag}\NormalTok{(surface}\SpecialCharTok{$}\NormalTok{sparse.matrix)}
+\NormalTok{sum.prob }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(surface}\SpecialCharTok{$}\NormalTok{sparse.matrix)}
+\NormalTok{sum.m.diag }\OtherTok{\textless{}{-}}\NormalTok{ sum.prob }\SpecialCharTok{{-}}\NormalTok{ diag}
+\NormalTok{neighbors }\OtherTok{\textless{}{-}} \FunctionTok{unlist}\NormalTok{(}\FunctionTok{lapply}\NormalTok{(ssf.comparisons, }\ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{nrow}\NormalTok{(x}\SpecialCharTok{$}\NormalTok{.for)))}
+
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{), }\AttributeTok{mai =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\FloatTok{0.2}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, diag), }\AttributeTok{main =} \StringTok{"Diagonal"}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, sum.prob), }\AttributeTok{main =} \StringTok{"Sum"}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, sum.m.diag), }\AttributeTok{main =} \StringTok{"Sum {-} Diagonal"}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, neighbors), }\AttributeTok{main =} \StringTok{"Neighbors"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Untitled_files/figure-latex/unnamed-chunk-22-1.pdf}
+
+\hypertarget{making-surfaces-from-predictions}{%
+\subsubsection{Making surfaces from
+predictions}\label{making-surfaces-from-predictions}}
+
+Here, we can run with summed probabilities as a first proxy. We can see
+there are real, tangible differences from PageRank.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sum.prob.raster }\OtherTok{\textless{}{-}} \FunctionTok{setValues}\NormalTok{(mock.surface, sum.prob)}
+
+\FunctionTok{plot}\NormalTok{(spatialEco}\SpecialCharTok{::}\FunctionTok{rasterCorrelation}\NormalTok{(page.rank.raster, sum.prob.raster))}
+\FunctionTok{points}\NormalTok{(deer, }\AttributeTok{pch =} \StringTok{"."}\NormalTok{, }\AttributeTok{col =} \FunctionTok{alpha}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\FloatTok{0.25}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Untitled_files/figure-latex/unnamed-chunk-23-1.pdf}
+
+\hypertarget{making-a-mock-rsf}{%
+\subsubsection{Making a mock RSF}\label{making-a-mock-rsf}}
+
+We can make a mock RSF, using our deer data set in a super flawed,
+overfit way. Interestingly, this RSF is PERFECTLY correlated with our
+prior Log-RSS surface - so pretty cool.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rsf }\OtherTok{\textless{}{-}}\NormalTok{ deer }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{random\_points}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{extract\_covariates}\NormalTok{(sh\_forest) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{sh.forest =} \FunctionTok{factor}\NormalTok{(sh.forest))}
+
+\NormalTok{rsf }\OtherTok{\textless{}{-}}\NormalTok{ rsf }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{fit\_rsf}\NormalTok{(case\_ }\SpecialCharTok{\textasciitilde{}}\NormalTok{ sh.forest, }\AttributeTok{model =}\NormalTok{ T) }
+
+\NormalTok{probabilities }\OtherTok{\textless{}{-}} \FunctionTok{exp}\NormalTok{(}\FunctionTok{predict}\NormalTok{(rsf}\SpecialCharTok{$}\NormalTok{model, }\AttributeTok{newdata =}\NormalTok{ pred.data))}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\FunctionTok{predict}\NormalTok{(rsf}\SpecialCharTok{$}\NormalTok{model, }\AttributeTok{newdata =}\NormalTok{ pred.data)))}
+\NormalTok{rsf.prob.raster }\OtherTok{\textless{}{-}} \FunctionTok{setValues}\NormalTok{(mock.surface, probabilities)}
+\FunctionTok{plot}\NormalTok{(rsf.prob.raster)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Untitled_files/figure-latex/unnamed-chunk-24-1.pdf}
+There are, however, deviations from both the base probabilities and the
+PageRank
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(spatialEco}\SpecialCharTok{::}\FunctionTok{rasterCorrelation}\NormalTok{(page.rank.raster, rsf.prob.raster))}
+\FunctionTok{points}\NormalTok{(deer, }\AttributeTok{pch =} \StringTok{"."}\NormalTok{, }\AttributeTok{col =} \FunctionTok{alpha}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\FloatTok{0.25}\NormalTok{), }\AttributeTok{main =} \StringTok{"RSF vs PageRank"}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(spatialEco}\SpecialCharTok{::}\FunctionTok{rasterCorrelation}\NormalTok{(sum.prob.raster, rsf.prob.raster))}
+\FunctionTok{points}\NormalTok{(deer, }\AttributeTok{pch =} \StringTok{"."}\NormalTok{, }\AttributeTok{col =} \FunctionTok{alpha}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\FloatTok{0.25}\NormalTok{), }\AttributeTok{main =} \StringTok{"RSF vs Probability"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Untitled_files/figure-latex/unnamed-chunk-25-1.pdf}
+
+\hypertarget{comparing-rsf-to-ssf-surfaces}{%
+\subsubsection{Comparing RSF to SSF
+surfaces}\label{comparing-rsf-to-ssf-surfaces}}
+
+We can also compare the data they contain, and what predictive power
+they have for the deer locations we observed.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ssf1 }\OtherTok{\textless{}{-}}\NormalTok{ deer }\SpecialCharTok{\%\textgreater{}\%} 
+      \FunctionTok{extract\_covariates}\NormalTok{(}\FunctionTok{stack}\NormalTok{(rsf.prob.raster, sum.prob.raster, page.rank.raster)) }
+
+\NormalTok{quantiles.pred }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(}\FunctionTok{values}\NormalTok{(rsf.prob.raster), }\FunctionTok{seq}\NormalTok{(}\FloatTok{0.01}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{by =} \FloatTok{0.01}\NormalTok{), }\AttributeTok{na.rm =}\NormalTok{ T)}
+\NormalTok{percent.in.a }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{100}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{(}\FunctionTok{length}\NormalTok{(quantiles.pred)))\{}
+\NormalTok{  yup }\OtherTok{\textless{}{-}}\NormalTok{ ssf1}\SpecialCharTok{$}\NormalTok{layer}\FloatTok{.1} \SpecialCharTok{\textless{}=}\NormalTok{ quantiles.pred[i]}
+\NormalTok{  percent.in.a[i] }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(yup, }\AttributeTok{na.rm =}\NormalTok{ T)}
+\NormalTok{\}}
+\NormalTok{percent.in.a }\OtherTok{\textless{}{-}}\NormalTok{ percent.in.a}\SpecialCharTok{/}\FunctionTok{table}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(ssf1}\SpecialCharTok{$}\NormalTok{layer}\FloatTok{.1}\NormalTok{))[}\DecValTok{1}\NormalTok{]}
+
+\NormalTok{quantiles.pred }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(}\FunctionTok{values}\NormalTok{(sum.prob.raster), }\FunctionTok{seq}\NormalTok{(}\FloatTok{0.01}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{by =} \FloatTok{0.01}\NormalTok{), }\AttributeTok{na.rm =}\NormalTok{ T)}
+\NormalTok{percent.in.b }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{100}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{(}\FunctionTok{length}\NormalTok{(quantiles.pred)))\{}
+\NormalTok{  yup }\OtherTok{\textless{}{-}}\NormalTok{ ssf1}\SpecialCharTok{$}\NormalTok{layer}\FloatTok{.2} \SpecialCharTok{\textless{}=}\NormalTok{ quantiles.pred[i]}
+\NormalTok{  percent.in.b[i] }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(yup, }\AttributeTok{na.rm =}\NormalTok{ T)}
+\NormalTok{\}}
+\NormalTok{percent.in.b }\OtherTok{\textless{}{-}}\NormalTok{ percent.in.b}\SpecialCharTok{/}\FunctionTok{table}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(ssf1}\SpecialCharTok{$}\NormalTok{layer}\FloatTok{.2}\NormalTok{))[}\DecValTok{1}\NormalTok{]}
+
+\NormalTok{quantiles.pred }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(}\FunctionTok{values}\NormalTok{(page.rank.raster), }\FunctionTok{seq}\NormalTok{(}\FloatTok{0.01}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{by =} \FloatTok{0.01}\NormalTok{), }\AttributeTok{na.rm =}\NormalTok{ T)}
+\NormalTok{percent.in.c }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{100}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{(}\FunctionTok{length}\NormalTok{(quantiles.pred)))\{}
+\NormalTok{  yup }\OtherTok{\textless{}{-}}\NormalTok{ ssf1}\SpecialCharTok{$}\NormalTok{layer}\FloatTok{.3} \SpecialCharTok{\textless{}=}\NormalTok{ quantiles.pred[i]}
+\NormalTok{  percent.in.c[i] }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(yup, }\AttributeTok{na.rm =}\NormalTok{ T)}
+\NormalTok{\}}
+\NormalTok{percent.in.c }\OtherTok{\textless{}{-}}\NormalTok{ percent.in.c}\SpecialCharTok{/}\FunctionTok{table}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(ssf1}\SpecialCharTok{$}\NormalTok{layer}\FloatTok{.3}\NormalTok{))[}\DecValTok{1}\NormalTok{]}
+
+\FunctionTok{tibble}\NormalTok{(}\AttributeTok{percent\_pred =} \FunctionTok{rep}\NormalTok{(}\FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{by =} \FloatTok{0.01}\NormalTok{)[}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{],}\DecValTok{3}\NormalTok{),}
+       \AttributeTok{precent\_obs =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{percent.in.a,}
+                       \DecValTok{1}\SpecialCharTok{{-}}\NormalTok{percent.in.b,}
+                       \DecValTok{1}\SpecialCharTok{{-}}\NormalTok{percent.in.c),}
+       \AttributeTok{pred\_type =} \FunctionTok{rep}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"RSF"}\NormalTok{, }\StringTok{"Summed Probability iSFF"}\NormalTok{, }\StringTok{"PageRank iSFF"}\NormalTok{), }
+                       \AttributeTok{each =} \DecValTok{100}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{group\_by}\NormalTok{(pred\_type) }\SpecialCharTok{\%\textgreater{}\%} 
+  \CommentTok{\# mutate(cum\_percent = cumsum(precent\_obs)) \%\textgreater{}\% }
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ percent\_pred, }\AttributeTok{y =}\NormalTok{ precent\_obs, }\AttributeTok{color =}\NormalTok{ pred\_type)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"Percentile of Predicted Surface"}\NormalTok{,}
+       \AttributeTok{y =} \StringTok{"Cumulative Percent of Observed Data by Percentile"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Untitled_files/figure-latex/unnamed-chunk-26-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(page.rank.raster}\SpecialCharTok{\textgreater{}}\NormalTok{quantiles.pred[}\FunctionTok{min}\NormalTok{(}\FunctionTok{which}\NormalTok{((}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{percent.in.c) }\SpecialCharTok{\textless{}} \FloatTok{0.9}\NormalTok{))])}
+\FunctionTok{points}\NormalTok{(amt\_fisher, }\AttributeTok{pch =} \StringTok{"."}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Untitled_files/figure-latex/unnamed-chunk-27-1.pdf}
+
+\hypertarget{fishers}{%
+\subsection{Fishers}\label{fishers}}
+
+This is data for a few fishers with elevation, land cover, and
+population density. I added aspect, TRI, and slope for fun. All the
+subheadings are largely the same, so I won't go into too much detail.
+
+\hypertarget{data-1}{%
+\subsubsection{Data}\label{data-1}}
+
+I created some new variables, and because extents are all different,
+they have to be called separately for pulling data. This is relevant
+later.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{data}\NormalTok{(}\StringTok{"amt\_fisher"}\NormalTok{)}
+\FunctionTok{data}\NormalTok{(}\StringTok{"amt\_fisher\_covar"}\NormalTok{)}
+
+\NormalTok{amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{slope }\OtherTok{\textless{}{-}} \FunctionTok{terrain}\NormalTok{(amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{elevation, }\AttributeTok{opt=}\StringTok{"slope"}\NormalTok{, }\AttributeTok{neighbors=}\DecValTok{8}\NormalTok{, }\AttributeTok{unit=}\StringTok{"degrees"}\NormalTok{)  }
+
+\NormalTok{amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{aspect }\OtherTok{\textless{}{-}} \FunctionTok{terrain}\NormalTok{(amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{elevation, }\AttributeTok{opt=}\StringTok{"aspect"}\NormalTok{, }\AttributeTok{neighbors=}\DecValTok{8}\NormalTok{, }\AttributeTok{unit=}\StringTok{"degrees"}\NormalTok{) }
+
+\NormalTok{amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{TRI }\OtherTok{\textless{}{-}} \FunctionTok{terrain}\NormalTok{(amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{elevation, }\AttributeTok{opt=}\StringTok{"TRI"}\NormalTok{, }\AttributeTok{neighbors=}\DecValTok{8}\NormalTok{, }\AttributeTok{unit=}\StringTok{"degrees"}\NormalTok{) }
+
+\NormalTok{ssf1 }\OtherTok{\textless{}{-}}\NormalTok{ amt\_fisher }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(name }\SpecialCharTok{==} \StringTok{"Leroy"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{track\_resample}\NormalTok{(}\AttributeTok{rate =} \FunctionTok{minutes}\NormalTok{(}\DecValTok{15}\NormalTok{), }\AttributeTok{tolerance =} \FunctionTok{minutes}\NormalTok{(}\DecValTok{3}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter\_min\_n\_burst}\NormalTok{(}\AttributeTok{min\_n =} \DecValTok{3}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{steps\_by\_burst}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{random\_steps}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{extract\_covariates}\NormalTok{(amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{landuse) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{extract\_covariates}\NormalTok{(amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{elevation) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{extract\_covariates}\NormalTok{(amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{slope) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{extract\_covariates}\NormalTok{(amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{aspect) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{extract\_covariates}\NormalTok{(amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{TRI) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{extract\_covariates}\NormalTok{(amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{popden) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{landC =} \FunctionTok{factor}\NormalTok{(landuse),}
+    \CommentTok{\#        case\_when(}
+    \CommentTok{\# landuse \%in\% c(81, 82) \textasciitilde{} "agri",}
+    \CommentTok{\# landuse \%in\% c(41, 42, 43) \textasciitilde{} "forest",}
+    \CommentTok{\# landuse \%in\% c(52) \textasciitilde{} "shrub",}
+    \CommentTok{\# landuse \%in\% c(31, 71) \textasciitilde{} "grass",}
+    \CommentTok{\# landuse \%in\% c(90,95) \textasciitilde{} "wet",}
+    \CommentTok{\# landuse \%in\% c(11, 21, 22, 23, 24) \textasciitilde{} "other"),}
+         \AttributeTok{cos\_ta =} \FunctionTok{cos}\NormalTok{(ta\_),}
+         \AttributeTok{log\_sl =} \FunctionTok{log}\NormalTok{(sl\_}\SpecialCharTok{+}\DecValTok{1}\NormalTok{),}
+    \AttributeTok{forest =} \FunctionTok{factor}\NormalTok{(landC }\SpecialCharTok{==} \DecValTok{50}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{model-1}{%
+\subsubsection{Model}\label{model-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m2 }\OtherTok{\textless{}{-}}\NormalTok{ ssf1 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{fit\_clogit}\NormalTok{(case\_ }\SpecialCharTok{\textasciitilde{}}\NormalTok{ (elevation }\SpecialCharTok{+}\NormalTok{ tri }\SpecialCharTok{+}\NormalTok{ popden }\SpecialCharTok{+}\NormalTok{ slope }\SpecialCharTok{+}\NormalTok{ aspect }\SpecialCharTok{+}\NormalTok{ cos\_ta }\SpecialCharTok{+}\NormalTok{ log\_sl)}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{+} \FunctionTok{strata}\NormalTok{(step\_id\_), }\AttributeTok{model =}\NormalTok{ T)}
+\FunctionTok{summary}\NormalTok{(m2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Call:
+## coxph(formula = Surv(rep(1, 8976L), case_) ~ (elevation + tri + 
+##     popden + slope + aspect + cos_ta + log_sl)^2 + strata(step_id_), 
+##     data = data, model = ..1, method = "exact")
+## 
+##   n= 8908, number of events= 748 
+##    (68 observations deleted due to missingness)
+## 
+##                        coef  exp(coef)   se(coef)      z Pr(>|z|)    
+## elevation         1.725e-01  1.188e+00  3.495e-02  4.935    8e-07 ***
+## tri               1.309e+00  3.703e+00  5.732e-01  2.284  0.02236 *  
+## popden            1.061e-02  1.011e+00  3.704e-03  2.865  0.00417 ** 
+## slope             1.017e-01  1.107e+00  5.121e-01  0.199  0.84260    
+## aspect            1.300e-02  1.013e+00  7.837e-03  1.659  0.09717 .  
+## cos_ta            6.910e-01  1.996e+00  1.035e+00  0.668  0.50435    
+## log_sl            1.158e+00  3.185e+00  4.231e-01  2.738  0.00618 ** 
+## elevation:tri    -1.112e-02  9.889e-01  4.883e-03 -2.277  0.02279 *  
+## elevation:popden -9.097e-05  9.999e-01  3.742e-05 -2.431  0.01505 *  
+## elevation:slope  -1.794e-03  9.982e-01  4.749e-03 -0.378  0.70564    
+## elevation:aspect -8.209e-05  9.999e-01  7.874e-05 -1.043  0.29715    
+## elevation:cos_ta -1.625e-02  9.839e-01  1.020e-02 -1.594  0.11101    
+## elevation:log_sl -1.083e-02  9.892e-01  4.262e-03 -2.540  0.01107 *  
+## tri:popden       -3.153e-04  9.997e-01  2.304e-04 -1.369  0.17111    
+## tri:slope         3.270e-02  1.033e+00  1.513e-02  2.161  0.03068 *  
+## tri:aspect       -3.154e-04  9.997e-01  5.296e-04 -0.596  0.55150    
+## tri:cos_ta       -5.046e-02  9.508e-01  6.076e-02 -0.831  0.40624    
+## tri:log_sl        6.309e-04  1.001e+00  2.647e-02  0.024  0.98099    
+## popden:slope     -2.262e-04  9.998e-01  1.724e-04 -1.312  0.18964    
+## popden:aspect    -2.298e-06  1.000e+00  1.584e-06 -1.451  0.14681    
+## popden:cos_ta    -2.547e-04  9.997e-01  2.149e-04 -1.185  0.23586    
+## popden:log_sl    -4.098e-05  1.000e+00  8.894e-05 -0.461  0.64499    
+## slope:aspect     -6.380e-04  9.994e-01  3.617e-04 -1.764  0.07777 .  
+## slope:cos_ta      6.175e-03  1.006e+00  4.279e-02  0.144  0.88524    
+## slope:log_sl      8.053e-03  1.008e+00  1.928e-02  0.418  0.67623    
+## aspect:cos_ta    -5.563e-04  9.994e-01  5.965e-04 -0.933  0.35101    
+## aspect:log_sl    -3.282e-04  9.997e-01  2.595e-04 -1.265  0.20592    
+## cos_ta:log_sl     2.705e-01  1.311e+00  3.203e-02  8.445  < 2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+##                  exp(coef) exp(-coef) lower .95 upper .95
+## elevation           1.1883     0.8416    1.1096    1.2725
+## tri                 3.7030     0.2700    1.2042   11.3874
+## popden              1.0107     0.9894    1.0034    1.0180
+## slope               1.1070     0.9033    0.4058    3.0201
+## aspect              1.0131     0.9871    0.9976    1.0288
+## cos_ta              1.9957     0.5011    0.2625   15.1737
+## log_sl              3.1850     0.3140    1.3898    7.2991
+## elevation:tri       0.9889     1.0112    0.9795    0.9985
+## elevation:popden    0.9999     1.0001    0.9998    1.0000
+## elevation:slope     0.9982     1.0018    0.9890    1.0075
+## elevation:aspect    0.9999     1.0001    0.9998    1.0001
+## elevation:cos_ta    0.9839     1.0164    0.9644    1.0037
+## elevation:log_sl    0.9892     1.0109    0.9810    0.9975
+## tri:popden          0.9997     1.0003    0.9992    1.0001
+## tri:slope           1.0332     0.9678    1.0030    1.0643
+## tri:aspect          0.9997     1.0003    0.9986    1.0007
+## tri:cos_ta          0.9508     1.0518    0.8440    1.0710
+## tri:log_sl          1.0006     0.9994    0.9500    1.0539
+## popden:slope        0.9998     1.0002    0.9994    1.0001
+## popden:aspect       1.0000     1.0000    1.0000    1.0000
+## popden:cos_ta       0.9997     1.0003    0.9993    1.0002
+## popden:log_sl       1.0000     1.0000    0.9998    1.0001
+## slope:aspect        0.9994     1.0006    0.9987    1.0001
+## slope:cos_ta        1.0062     0.9938    0.9253    1.0942
+## slope:log_sl        1.0081     0.9920    0.9707    1.0469
+## aspect:cos_ta       0.9994     1.0006    0.9983    1.0006
+## aspect:log_sl       0.9997     1.0003    0.9992    1.0002
+## cos_ta:log_sl       1.3106     0.7630    1.2309    1.3956
+## 
+## Concordance= 0.669  (se = 0.012 )
+## Likelihood ratio test= 227.4  on 28 df,   p=<2e-16
+## Wald test            = 211.2  on 28 df,   p=<2e-16
+## Score (logrank) test = 230.2  on 28 df,   p=<2e-16
+\end{verbatim}
+
+\hypertarget{surface-1}{%
+\subsubsection{Surface}\label{surface-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mock.surface }\OtherTok{\textless{}{-}} \FunctionTok{create\_mock\_surface}\NormalTok{(amt\_fisher\_covar, T, }\FunctionTok{list}\NormalTok{(}\AttributeTok{x =} \DecValTok{200}\NormalTok{, }\AttributeTok{y =} \DecValTok{200}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{getting-cell-data-1}{%
+\subsubsection{Getting cell data}\label{getting-cell-data-1}}
+
+Because we cant pull all underlying raster data in one pull, we have to
+do it multiple times for each variable and then merge. Then we have to
+sort by cell number to get things square.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pred.data.l }\OtherTok{\textless{}{-}} \FunctionTok{get\_cells}\NormalTok{(m2, }
+\NormalTok{                       mock.surface,}
+\NormalTok{                       amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{landuse, }
+                       \AttributeTok{accessory.x.preds =} \FunctionTok{list}\NormalTok{(}\AttributeTok{log\_sl =} \FunctionTok{log}\NormalTok{(}\FunctionTok{step\_distance}\NormalTok{(m2, }\FloatTok{0.5}\NormalTok{)), }
+                                                \AttributeTok{cos\_ta =} \DecValTok{1}\NormalTok{))}
+\NormalTok{pred.data.e }\OtherTok{\textless{}{-}} \FunctionTok{get\_cells}\NormalTok{(m2, }
+\NormalTok{                       mock.surface,}
+\NormalTok{                       amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{elevation, }
+                       \AttributeTok{accessory.x.preds =} \FunctionTok{list}\NormalTok{(}\AttributeTok{log\_sl =} \FunctionTok{log}\NormalTok{(}\FunctionTok{step\_distance}\NormalTok{(m2, }\FloatTok{0.5}\NormalTok{)), }
+                                                \AttributeTok{cos\_ta =} \DecValTok{1}\NormalTok{))}
+\NormalTok{pred.data.p }\OtherTok{\textless{}{-}} \FunctionTok{get\_cells}\NormalTok{(m2, }
+\NormalTok{                       mock.surface,}
+\NormalTok{                       amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{popden, }
+                       \AttributeTok{accessory.x.preds =} \FunctionTok{list}\NormalTok{(}\AttributeTok{log\_sl =} \FunctionTok{log}\NormalTok{(}\FunctionTok{step\_distance}\NormalTok{(m2, }\FloatTok{0.5}\NormalTok{)), }
+                                                \AttributeTok{cos\_ta =} \DecValTok{1}\NormalTok{))}
+
+\NormalTok{pred.data.s }\OtherTok{\textless{}{-}} \FunctionTok{get\_cells}\NormalTok{(m2, }
+\NormalTok{                       mock.surface,}
+\NormalTok{                       amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{slope, }
+                       \AttributeTok{accessory.x.preds =} \FunctionTok{list}\NormalTok{(}\AttributeTok{log\_sl =} \FunctionTok{log}\NormalTok{(}\FunctionTok{step\_distance}\NormalTok{(m2, }\FloatTok{0.5}\NormalTok{)), }
+                                                \AttributeTok{cos\_ta =} \DecValTok{1}\NormalTok{))}
+
+\NormalTok{pred.data.a }\OtherTok{\textless{}{-}} \FunctionTok{get\_cells}\NormalTok{(m2, }
+\NormalTok{                       mock.surface,}
+\NormalTok{                       amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{aspect, }
+                       \AttributeTok{accessory.x.preds =} \FunctionTok{list}\NormalTok{(}\AttributeTok{log\_sl =} \FunctionTok{log}\NormalTok{(}\FunctionTok{step\_distance}\NormalTok{(m2, }\FloatTok{0.5}\NormalTok{)), }
+                                                \AttributeTok{cos\_ta =} \DecValTok{1}\NormalTok{))}
+
+\NormalTok{pred.data.t }\OtherTok{\textless{}{-}} \FunctionTok{get\_cells}\NormalTok{(m2, }
+\NormalTok{                       mock.surface,}
+\NormalTok{                       amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{TRI, }
+                       \AttributeTok{accessory.x.preds =} \FunctionTok{list}\NormalTok{(}\AttributeTok{log\_sl =} \FunctionTok{log}\NormalTok{(}\FunctionTok{step\_distance}\NormalTok{(m2, }\FloatTok{0.5}\NormalTok{)), }
+                                                \AttributeTok{cos\_ta =} \DecValTok{1}\NormalTok{))}
+
+\NormalTok{pred.data }\OtherTok{\textless{}{-}} \FunctionTok{merge}\NormalTok{(}
+  \FunctionTok{merge}\NormalTok{(}
+    \FunctionTok{merge}\NormalTok{(}
+      \FunctionTok{merge}\NormalTok{(}
+        \FunctionTok{merge}\NormalTok{(pred.data.l,pred.data.e),}
+\NormalTok{        pred.data.p),}
+\NormalTok{      pred.data.s),}
+\NormalTok{    pred.data.a),}
+\NormalTok{  pred.data.t)}
+
+\NormalTok{pred.data }\OtherTok{\textless{}{-}}\NormalTok{ pred.data }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{arrange}\NormalTok{(cellnr)}
+
+\NormalTok{pred.data}\SpecialCharTok{$}\NormalTok{forest }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(pred.data}\SpecialCharTok{$}\NormalTok{landuse }\SpecialCharTok{==} \DecValTok{50}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{testing-surface-1}{%
+\subsubsection{Testing surface}\label{testing-surface-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cell.data }\OtherTok{\textless{}{-}} \FunctionTok{get\_cell\_data}\NormalTok{(m2, pred.data)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{finding-neighbors-1}{%
+\subsubsection{Finding neighbors}\label{finding-neighbors-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{neighbors.found }\OtherTok{\textless{}{-}} \FunctionTok{neighbor\_lookup}\NormalTok{(mock.surface, cell.data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Splitting cell.data into list"
+## [1] "Using inputted list of cell data"
+\end{verbatim}
+
+\hypertarget{making-neighbor-comparisons-1}{%
+\subsubsection{Making neighbor
+comparisons}\label{making-neighbor-comparisons-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sparse.neighbors }\OtherTok{\textless{}{-}} \FunctionTok{neighbor\_finder}\NormalTok{(m2, cell.data, neighbors.found, }\AttributeTok{quantile =} \FloatTok{0.99}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Creating neighbor comparisons"
+## [1] "Finding valid comparisons"
+## [1] "Splitting cell.data into list"
+## [1] "Using inputted list of cell data"
+## [1] "Running comparisons"
+\end{verbatim}
+
+\hypertarget{compiling-ssf-comparisons-1}{%
+\subsubsection{Compiling SSF
+comparisons}\label{compiling-ssf-comparisons-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ssf.comparisons }\OtherTok{\textless{}{-}} \FunctionTok{compile\_ssf\_comparisons}\NormalTok{(sparse.neighbors, cell.data)}
+
+\NormalTok{ssf.comparisons }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(ssf.comparisons, }\ControlFlowTok{function}\NormalTok{(x) \{}
+\NormalTok{  x}\SpecialCharTok{$}\NormalTok{.for}\SpecialCharTok{$}\NormalTok{log\_sl }\OtherTok{\textless{}{-}} \FunctionTok{log}\NormalTok{(x}\SpecialCharTok{$}\NormalTok{.for}\SpecialCharTok{$}\NormalTok{step}\SpecialCharTok{+}\DecValTok{1}\NormalTok{)}
+\NormalTok{  x}\SpecialCharTok{$}\NormalTok{.given}\SpecialCharTok{$}\NormalTok{log\_sl }\OtherTok{\textless{}{-}} \FunctionTok{log}\NormalTok{(x}\SpecialCharTok{$}\NormalTok{.given}\SpecialCharTok{$}\NormalTok{step}\SpecialCharTok{+}\DecValTok{1}\NormalTok{)}
+  
+\NormalTok{  x}\SpecialCharTok{$}\NormalTok{.for}\SpecialCharTok{$}\NormalTok{cos\_ta }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{  x}\SpecialCharTok{$}\NormalTok{.given}\SpecialCharTok{$}\NormalTok{cos\_ta }\OtherTok{\textless{}{-}} \DecValTok{0}
+  
+  \FunctionTok{list}\NormalTok{(}\AttributeTok{.for =}\NormalTok{ x}\SpecialCharTok{$}\NormalTok{.for, }\AttributeTok{.given =}\NormalTok{ x}\SpecialCharTok{$}\NormalTok{.given)}
+\NormalTok{\})}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{predicting-surface-probabilities-1}{%
+\subsubsection{Predicting surface
+probabilities}\label{predicting-surface-probabilities-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surface }\OtherTok{\textless{}{-}} \FunctionTok{predict\_ssf\_comparisons}\NormalTok{(m2, ssf.comparisons)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Estimating probability surface"
+## [1] "Compiling probability surface"
+## [1] "Making sparse matrix for transitions"
+\end{verbatim}
+
+\hypertarget{making-graph-1}{%
+\subsubsection{Making graph}\label{making-graph-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{g }\OtherTok{\textless{}{-}} \FunctionTok{graph\_from\_adjacency\_matrix}\NormalTok{(surface}\SpecialCharTok{$}\NormalTok{sparse.matrix, }\AttributeTok{mode =} \StringTok{"directed"}\NormalTok{, }\AttributeTok{weighted =}\NormalTok{ T, }\AttributeTok{diag =}\NormalTok{ T)}
+\FunctionTok{V}\NormalTok{(g)}\SpecialCharTok{$}\NormalTok{name }\OtherTok{\textless{}{-}} \FunctionTok{V}\NormalTok{(g)}
+\NormalTok{Isolated }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(}\FunctionTok{degree}\NormalTok{(g)}\SpecialCharTok{==}\DecValTok{0}\NormalTok{)}
+\NormalTok{Connected }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(}\FunctionTok{degree}\NormalTok{(g)}\SpecialCharTok{\textgreater{}}\DecValTok{0}\NormalTok{)}
+\NormalTok{g }\OtherTok{\textless{}{-}} \FunctionTok{delete.vertices}\NormalTok{(g, Isolated)}
+\NormalTok{g }\OtherTok{\textless{}{-}} \FunctionTok{delete.edges}\NormalTok{(g, }\FunctionTok{E}\NormalTok{(g)[}\FunctionTok{is.na}\NormalTok{(weight)])}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{calculating-centrality-1}{%
+\subsubsection{Calculating centrality}\label{calculating-centrality-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pg }\OtherTok{\textless{}{-}} \FunctionTok{page\_rank}\NormalTok{(g)}
+
+\NormalTok{values }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\ConstantTok{NA}\NormalTok{, }\FunctionTok{length}\NormalTok{(mock.surface))}
+\NormalTok{values[}\FunctionTok{V}\NormalTok{(g)}\SpecialCharTok{$}\NormalTok{name] }\OtherTok{\textless{}{-}}\NormalTok{ pg}\SpecialCharTok{$}\NormalTok{vector}
+\NormalTok{page.rank.raster }\OtherTok{\textless{}{-}} \FunctionTok{setValues}\NormalTok{(mock.surface, values)}
+
+\FunctionTok{plot}\NormalTok{(page.rank.raster, }\AttributeTok{interpolate =}\NormalTok{ F)}
+\FunctionTok{points}\NormalTok{(amt\_fisher }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(name }\SpecialCharTok{==} \StringTok{"Leroy"}\NormalTok{), }\AttributeTok{pch =} \StringTok{"."}\NormalTok{, }\AttributeTok{col =} \FunctionTok{alpha}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\FloatTok{0.1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Untitled_files/figure-latex/unnamed-chunk-38-1.pdf}
+
+\hypertarget{making-a-mock-rsf-1}{%
+\subsubsection{Making a mock RSF}\label{making-a-mock-rsf-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rsf.data }\OtherTok{\textless{}{-}}\NormalTok{ amt\_fisher }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(name }\SpecialCharTok{==} \StringTok{"Leroy"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{random\_points}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{extract\_covariates}\NormalTok{(amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{landuse) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{extract\_covariates}\NormalTok{(amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{elevation) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{extract\_covariates}\NormalTok{(amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{slope) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{extract\_covariates}\NormalTok{(amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{aspect) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{extract\_covariates}\NormalTok{(amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{TRI) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{extract\_covariates}\NormalTok{(amt\_fisher\_covar}\SpecialCharTok{$}\NormalTok{popden) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{landC =} \FunctionTok{factor}\NormalTok{(landuse),}
+    \AttributeTok{forest =} \FunctionTok{factor}\NormalTok{(landC }\SpecialCharTok{==} \DecValTok{50}\NormalTok{))}
+
+\NormalTok{rsf }\OtherTok{\textless{}{-}}\NormalTok{ rsf.data }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{fit\_rsf}\NormalTok{(case\_ }\SpecialCharTok{\textasciitilde{}}\NormalTok{ (elevation }\SpecialCharTok{+}\NormalTok{ tri }\SpecialCharTok{+}\NormalTok{ popden }\SpecialCharTok{+}\NormalTok{ slope }\SpecialCharTok{+}\NormalTok{ aspect)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{, }\AttributeTok{model =}\NormalTok{ T) }
+\FunctionTok{summary}\NormalTok{(rsf)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## stats::glm(formula = formula, family = stats::binomial(link = "logit"), 
+##     data = data, model = ..1)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -1.8255  -0.4441  -0.3749  -0.3160   2.7220  
+## 
+## Coefficients:
+##                    Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)      -1.131e+01  2.234e+00  -5.060 4.19e-07 ***
+## elevation         7.129e-02  2.261e-02   3.153 0.001619 ** 
+## tri               3.800e-01  5.178e-01   0.734 0.463013    
+## popden            1.582e-02  2.437e-03   6.492 8.47e-11 ***
+## slope             3.425e-01  4.097e-01   0.836 0.403086    
+## aspect            2.610e-03  6.386e-03   0.409 0.682790    
+## elevation:tri     1.277e-03  4.812e-03   0.265 0.790706    
+## elevation:popden -1.343e-04  2.520e-05  -5.328 9.91e-08 ***
+## elevation:slope  -2.640e-03  3.928e-03  -0.672 0.501483    
+## elevation:aspect  1.172e-05  6.546e-05   0.179 0.857912    
+## tri:popden       -4.813e-04  1.972e-04  -2.440 0.014684 *  
+## tri:slope         1.170e-03  1.204e-02   0.097 0.922606    
+## tri:aspect       -4.346e-04  4.077e-04  -1.066 0.286487    
+## popden:slope     -2.143e-04  1.488e-04  -1.441 0.149701    
+## popden:aspect     8.870e-07  1.322e-06   0.671 0.502306    
+## slope:aspect     -1.027e-03  2.918e-04  -3.521 0.000431 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 6159.1  on 10108  degrees of freedom
+## Residual deviance: 5755.4  on 10093  degrees of freedom
+## AIC: 5787.4
+## 
+## Number of Fisher Scoring iterations: 5
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{probabilities }\OtherTok{\textless{}{-}} \FunctionTok{exp}\NormalTok{(}\FunctionTok{predict}\NormalTok{(rsf}\SpecialCharTok{$}\NormalTok{model, }\AttributeTok{newdata =}\NormalTok{ pred.data))}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(}\FunctionTok{predict}\NormalTok{(rsf}\SpecialCharTok{$}\NormalTok{model, }\AttributeTok{newdata =}\NormalTok{ pred.data)))}
+\NormalTok{rsf.prob.raster }\OtherTok{\textless{}{-}} \FunctionTok{setValues}\NormalTok{(mock.surface, probabilities)}
+\FunctionTok{plot}\NormalTok{(rsf.prob.raster)}
+\FunctionTok{points}\NormalTok{(amt\_fisher }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(name }\SpecialCharTok{==} \StringTok{"Leroy"}\NormalTok{), }\AttributeTok{pch =} \StringTok{"."}\NormalTok{, }\AttributeTok{col =} \FunctionTok{alpha}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\FloatTok{0.25}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Untitled_files/figure-latex/unnamed-chunk-39-1.pdf}
+
+Lots of interesting differences from the RSF.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(spatialEco}\SpecialCharTok{::}\FunctionTok{rasterCorrelation}\NormalTok{(page.rank.raster, rsf.prob.raster))}
+\FunctionTok{points}\NormalTok{(deer, }\AttributeTok{pch =} \StringTok{"."}\NormalTok{, }\AttributeTok{col =} \FunctionTok{alpha}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\FloatTok{0.25}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Untitled_files/figure-latex/unnamed-chunk-40-1.pdf}
+
+\hypertarget{comparing-rsf-to-ssf-surfaces-1}{%
+\subsubsection{Comparing RSF to SSF
+surfaces}\label{comparing-rsf-to-ssf-surfaces-1}}
+
+Here, we are leveraging the fact that there are other fisher that we
+never modeled to test our inferences.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ssf1 }\OtherTok{\textless{}{-}}\NormalTok{ amt\_fisher }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(name }\SpecialCharTok{==} \StringTok{"Leroy"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+      \FunctionTok{extract\_covariates}\NormalTok{(}\FunctionTok{stack}\NormalTok{(rsf.prob.raster, page.rank.raster)) }
+
+\NormalTok{quantiles.pred }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(}\FunctionTok{values}\NormalTok{(rsf.prob.raster), }\FunctionTok{seq}\NormalTok{(}\FloatTok{0.01}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{by =} \FloatTok{0.01}\NormalTok{), }\AttributeTok{na.rm =}\NormalTok{ T)}
+\NormalTok{percent.in.a }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{100}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{(}\FunctionTok{length}\NormalTok{(quantiles.pred)))\{}
+\NormalTok{  yup }\OtherTok{\textless{}{-}}\NormalTok{ ssf1}\SpecialCharTok{$}\NormalTok{layer}\FloatTok{.1} \SpecialCharTok{\textless{}=}\NormalTok{ quantiles.pred[i]}
+\NormalTok{  percent.in.a[i] }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(yup, }\AttributeTok{na.rm =}\NormalTok{ T)}
+\NormalTok{\}}
+\NormalTok{percent.in.a }\OtherTok{\textless{}{-}}\NormalTok{ percent.in.a}\SpecialCharTok{/}\FunctionTok{table}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(ssf1}\SpecialCharTok{$}\NormalTok{layer}\FloatTok{.1}\NormalTok{))[}\DecValTok{1}\NormalTok{]}
+
+\NormalTok{quantiles.pred }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(}\FunctionTok{values}\NormalTok{(page.rank.raster), }\FunctionTok{seq}\NormalTok{(}\FloatTok{0.01}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{by =} \FloatTok{0.01}\NormalTok{), }\AttributeTok{na.rm =}\NormalTok{ T)}
+\NormalTok{percent.in.b }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{100}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{(}\FunctionTok{length}\NormalTok{(quantiles.pred)))\{}
+\NormalTok{  yup }\OtherTok{\textless{}{-}}\NormalTok{ ssf1}\SpecialCharTok{$}\NormalTok{layer}\FloatTok{.2} \SpecialCharTok{\textless{}=}\NormalTok{ quantiles.pred[i]}
+\NormalTok{  percent.in.b[i] }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(yup, }\AttributeTok{na.rm =}\NormalTok{ T)}
+\NormalTok{\}}
+\NormalTok{percent.in.b }\OtherTok{\textless{}{-}}\NormalTok{ percent.in.b}\SpecialCharTok{/}\FunctionTok{table}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(ssf1}\SpecialCharTok{$}\NormalTok{layer}\FloatTok{.2}\NormalTok{))[}\DecValTok{1}\NormalTok{]}
+
+\FunctionTok{tibble}\NormalTok{(}\AttributeTok{percent\_pred =} \FunctionTok{rep}\NormalTok{(}\FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{by =} \FloatTok{0.01}\NormalTok{)[}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{],}\DecValTok{2}\NormalTok{),}
+       \AttributeTok{precent\_obs =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{percent.in.a,}
+                       \DecValTok{1}\SpecialCharTok{{-}}\NormalTok{percent.in.b),}
+       \AttributeTok{pred\_type =} \FunctionTok{rep}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"RSF"}\NormalTok{, }\StringTok{"PageRank iSFF"}\NormalTok{), }
+                       \AttributeTok{each =} \DecValTok{100}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{group\_by}\NormalTok{(pred\_type) }\SpecialCharTok{\%\textgreater{}\%} 
+  \CommentTok{\# mutate(cum\_percent = cumsum(precent\_obs)) \%\textgreater{}\% }
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ percent\_pred, }\AttributeTok{y =}\NormalTok{ precent\_obs, }\AttributeTok{color =}\NormalTok{ pred\_type)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"Percentile of Predicted Surface"}\NormalTok{,}
+       \AttributeTok{y =} \StringTok{"Cumulative Percent of Observed Data by Percentile"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Untitled_files/figure-latex/unnamed-chunk-41-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(page.rank.raster}\SpecialCharTok{\textgreater{}}\NormalTok{quantiles.pred[}\FunctionTok{min}\NormalTok{(}\FunctionTok{which}\NormalTok{((}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{percent.in.b) }\SpecialCharTok{\textless{}} \FloatTok{0.9}\NormalTok{))])}
+\FunctionTok{points}\NormalTok{(amt\_fisher, }\AttributeTok{pch =} \StringTok{"."}\NormalTok{, }\AttributeTok{col =} \FunctionTok{alpha}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\FloatTok{0.1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Untitled_files/figure-latex/unnamed-chunk-42-1.pdf}
+
+\hypertarget{bighorn-sheep-not-public}{%
+\subsection{Bighorn Sheep (not public)}\label{bighorn-sheep-not-public}}
+
+This is data for a 59 sheep from SW Alberta, with elevation, forest
+canopy, distance to escape terrain, land cover, NDVI amplitude and
+maximum, slope, and vector ruggedness. I trimmed the data set for the
+movement models down to 4 individuals.
+
+\hypertarget{data-2}{%
+\subsubsection{Data}\label{data-2}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{files }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"aspect.tif"}\NormalTok{,}\StringTok{"canopy.tif"}\NormalTok{,}\StringTok{"descp37.tif"}\NormalTok{,}\StringTok{"elev.tif"}\NormalTok{,}\StringTok{"escp37.tif"}\NormalTok{,}\StringTok{"lc\_for.tif"}\NormalTok{,}\StringTok{"lc\_grass.tif"}\NormalTok{,}\StringTok{"lc\_other.tif"}\NormalTok{,}\StringTok{"lc\_rock.tif"}\NormalTok{,}\StringTok{"lc\_shrub.tif"}\NormalTok{,}\StringTok{"ndvi\_amp.tif"}\NormalTok{,}\StringTok{"ndvi\_max.tif"}\NormalTok{,}\StringTok{"slope.tif"}\NormalTok{,}\StringTok{"vrm3.tif"}\NormalTok{)}
+
+\NormalTok{raster\_list }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{()}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(files)) \{}
+\NormalTok{  tmp }\OtherTok{\textless{}{-}} \FunctionTok{str\_remove}\NormalTok{(files[i], }\StringTok{".tif"}\NormalTok{)}
+\NormalTok{  name }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"\textasciitilde{}/Downloads/Research/BHS\_Mvmt/Data/RSF{-}2/GIS/writtenrasters/"}\NormalTok{,}
+\NormalTok{                 files[i])}
+\NormalTok{  raster\_list }\OtherTok{\textless{}{-}} \FunctionTok{append}\NormalTok{(raster\_list,  }\FunctionTok{assign}\NormalTok{(tmp, }\FunctionTok{raster}\NormalTok{(name)))}
+\NormalTok{\}}
+\NormalTok{rstack }\OtherTok{\textless{}{-}} \FunctionTok{stack}\NormalTok{(raster\_list)}
+\NormalTok{rstack. }\OtherTok{\textless{}{-}} \FunctionTok{aggregate}\NormalTok{(rstack, }\DecValTok{50}\NormalTok{)}
+\CommentTok{\# plot(rstack.)}
+\FunctionTok{length}\NormalTok{(rstack.)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 58548
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{sin}\NormalTok{(pi}\SpecialCharTok{*}\NormalTok{rstack}\SpecialCharTok{$}\NormalTok{aspect))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Untitled_files/figure-latex/unnamed-chunk-43-1.pdf}
+
+The movement tracks are already in individual step formats. I also
+appended some info from a HMM segmentation.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{processed }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(}\StringTok{"\textasciitilde{}/Downloads/Research/BHS\_Mvmt/Sheep\_Mvmt/Manuscript Code/Processed.rds"}\NormalTok{)}
+
+\NormalTok{four.ind }\OtherTok{\textless{}{-}}\NormalTok{ processed }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(ID }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\StringTok{"282\_2008"}\NormalTok{, }\StringTok{"593\_2008"}\NormalTok{, }\StringTok{"600\_2007"}\NormalTok{, }\StringTok{"677\_2005"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{group\_by}\NormalTok{(ID) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{distinct}\NormalTok{(dt, }\AttributeTok{.keep\_all =}\NormalTok{ T) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ungroup}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{date\_time =} \FunctionTok{as.POSIXct}\NormalTok{(date\_time)) }\SpecialCharTok{\%\textgreater{}\%} 
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x}\FloatTok{.1}\NormalTok{, }\AttributeTok{y =}\NormalTok{ y}\FloatTok{.1}\NormalTok{, }
+         \AttributeTok{t =}\NormalTok{ date\_time, }\AttributeTok{id =}\NormalTok{ ID, }\AttributeTok{age =}\NormalTok{ age, }\AttributeTok{state =}\NormalTok{ states) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{arrange\_at}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"id"}\NormalTok{, }\StringTok{"t"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{nest}\NormalTok{(}\AttributeTok{data =} \SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(}\StringTok{"id"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{trk =} \FunctionTok{lapply}\NormalTok{(data,}
+                      \ControlFlowTok{function}\NormalTok{(d) \{}
+                        \FunctionTok{make\_track}\NormalTok{(d, x, y, t, }
+                                   \AttributeTok{age =}\NormalTok{ age, }
+                                   \AttributeTok{state =}\NormalTok{ state, }\CommentTok{\# this is from a HMM segmentation in three de novo states}
+                                   \AttributeTok{crs =}\NormalTok{ sp}\SpecialCharTok{::}\FunctionTok{CRS}\NormalTok{(}\StringTok{"+proj=utm +zone=11"}\NormalTok{))}
+\NormalTok{                        \})) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{steps =} \FunctionTok{map}\NormalTok{(trk, }\ControlFlowTok{function}\NormalTok{(x) \{}
+\NormalTok{    x }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{track\_resample}\NormalTok{(}\AttributeTok{rate =} \FunctionTok{minutes}\NormalTok{(}\DecValTok{30}\NormalTok{), }\AttributeTok{tolerance =} \FunctionTok{minutes}\NormalTok{(}\DecValTok{10}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{steps\_by\_burst}\NormalTok{(}\AttributeTok{keep\_cols =} \StringTok{"start"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{random\_steps}\NormalTok{(}\DecValTok{15}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{extract\_covariates}\NormalTok{(rstack.) }\SpecialCharTok{\%\textgreater{}\%} 
+      \FunctionTok{mutate}\NormalTok{(}
+        \CommentTok{\# lc\_shrub = factor(lc\_shrub),}
+        \CommentTok{\# lc\_for = factor(lc\_for),}
+        \CommentTok{\# lc\_grass = factor(lc\_grass),}
+        \CommentTok{\# lc\_other = factor(lc\_other),}
+        \CommentTok{\# lc\_rock = factor(lc\_rock),}
+        \CommentTok{\# escp37 = factor(escp37),}
+        \AttributeTok{cos\_ta =} \FunctionTok{cos}\NormalTok{(ta\_),}
+        \AttributeTok{log\_sl =} \FunctionTok{log}\NormalTok{(sl\_}\SpecialCharTok{+}\DecValTok{1}\NormalTok{))}
+\NormalTok{  \}))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: 'make_track' is deprecated.
+## Use 'It looks like you used `CRS()` to create the crs,
+##                   please use the ESPG directly.' instead.
+## See help("Deprecated")
+
+## Warning: 'make_track' is deprecated.
+## Use 'It looks like you used `CRS()` to create the crs,
+##                   please use the ESPG directly.' instead.
+## See help("Deprecated")
+
+## Warning: 'make_track' is deprecated.
+## Use 'It looks like you used `CRS()` to create the crs,
+##                   please use the ESPG directly.' instead.
+## See help("Deprecated")
+
+## Warning: 'make_track' is deprecated.
+## Use 'It looks like you used `CRS()` to create the crs,
+##                   please use the ESPG directly.' instead.
+## See help("Deprecated")
+\end{verbatim}
+
+\hypertarget{model-2}{%
+\subsubsection{Model}\label{model-2}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m2 }\OtherTok{\textless{}{-}}\NormalTok{ four.ind }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{model =} \FunctionTok{map}\NormalTok{(steps, }\ControlFlowTok{function}\NormalTok{(x) \{}
+\NormalTok{    x }\SpecialCharTok{\%\textgreater{}\%} 
+      \FunctionTok{fit\_clogit}\NormalTok{(case\_ }\SpecialCharTok{\textasciitilde{}}\NormalTok{ log\_sl }\SpecialCharTok{+} \FunctionTok{poly}\NormalTok{(canopy,}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{poly}\NormalTok{(vrm3,}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{poly}\NormalTok{(lc\_grass,}\DecValTok{1}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{poly}\NormalTok{(lc\_shrub,}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{poly}\NormalTok{(lc\_rock,}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{poly}\NormalTok{(ndvi\_amp,}\DecValTok{1}\NormalTok{) }\SpecialCharTok{+}\NormalTok{ cos\_ta }\SpecialCharTok{+} \FunctionTok{strata}\NormalTok{(step\_id\_), }\AttributeTok{model =}\NormalTok{ T)}
+\NormalTok{  \}))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{surface-2}{%
+\subsubsection{Surface}\label{surface-2}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mock.surface }\OtherTok{\textless{}{-}} \FunctionTok{create\_mock\_surface}\NormalTok{(rstack., F, }\FunctionTok{list}\NormalTok{(}\AttributeTok{x =} \DecValTok{1250}\NormalTok{, }\AttributeTok{y =} \DecValTok{1250}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{getting-cell-data-2}{%
+\subsubsection{Getting cell data}\label{getting-cell-data-2}}
+
+Since we have multiple models fit, we can just use the first model to
+get everything into shape.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pred.data }\OtherTok{\textless{}{-}} \FunctionTok{get\_cells}\NormalTok{(m2}\SpecialCharTok{$}\NormalTok{model[[}\DecValTok{1}\NormalTok{]], }
+\NormalTok{                       mock.surface,}
+\NormalTok{                       rstack., }
+                       \AttributeTok{accessory.x.preds =} \FunctionTok{list}\NormalTok{(}\AttributeTok{log\_sl =} \FunctionTok{log}\NormalTok{(}\FunctionTok{step\_distance}\NormalTok{(m2}\SpecialCharTok{$}\NormalTok{model[[}\DecValTok{1}\NormalTok{]], }\FloatTok{0.5}\NormalTok{)), }
+                                                \AttributeTok{cos\_ta =} \DecValTok{1}\NormalTok{))}
+
+\NormalTok{pred.data }\OtherTok{\textless{}{-}}\NormalTok{ pred.data }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{arrange}\NormalTok{(cellnr)}
+
+\CommentTok{\# pred.data$lc\_for \textless{}{-} factor(pred.data$lc\_for)}
+\CommentTok{\# pred.data$lc\_grass \textless{}{-} factor(pred.data$lc\_grass)}
+\CommentTok{\# pred.data$lc\_other \textless{}{-} factor(pred.data$lc\_other)}
+\CommentTok{\# pred.data$lc\_shrub \textless{}{-} factor(pred.data$lc\_shrub)}
+\CommentTok{\# pred.data$lc\_rock \textless{}{-} factor(pred.data$lc\_rock)}
+\CommentTok{\# pred.data$escp37 \textless{}{-} factor(pred.data$escp37)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{testing-surface-2}{%
+\subsubsection{Testing surface}\label{testing-surface-2}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cell.data }\OtherTok{\textless{}{-}} \FunctionTok{get\_cell\_data}\NormalTok{(m2}\SpecialCharTok{$}\NormalTok{model[[}\DecValTok{1}\NormalTok{]], pred.data)}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{setValues}\NormalTok{(mock.surface, cell.data}\SpecialCharTok{$}\NormalTok{lRSS), }\AttributeTok{useRaster =}\NormalTok{ T, }\AttributeTok{interpolate =}\NormalTok{ F)}
+\FunctionTok{lines}\NormalTok{(m2}\SpecialCharTok{$}\NormalTok{trk[[}\DecValTok{1}\NormalTok{]])}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Untitled_files/figure-latex/unnamed-chunk-48-1.pdf}
+
+\hypertarget{finding-neighbors-2}{%
+\subsubsection{Finding neighbors}\label{finding-neighbors-2}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cell.data.list }\OtherTok{\textless{}{-}} \FunctionTok{pbmclapply}\NormalTok{(}\FunctionTok{as.list}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{dim}\NormalTok{(cell.data)[}\DecValTok{1}\NormalTok{]), }\ControlFlowTok{function}\NormalTok{(x) cell.data[x[}\DecValTok{1}\NormalTok{],])}
+\NormalTok{neighbors.found }\OtherTok{\textless{}{-}} \FunctionTok{neighbor\_lookup}\NormalTok{(mock.surface, cell.data, cell.data.list)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Using inputted list of cell data"
+\end{verbatim}
+
+\hypertarget{making-neighbor-comparisons-2}{%
+\subsubsection{Making neighbor
+comparisons}\label{making-neighbor-comparisons-2}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sparse.neighbors }\OtherTok{\textless{}{-}} \FunctionTok{neighbor\_finder}\NormalTok{(m2}\SpecialCharTok{$}\NormalTok{model[[}\DecValTok{3}\NormalTok{]], cell.data, neighbors.found, }\AttributeTok{quantile =} \FloatTok{0.999999999999999}\NormalTok{, cell.data.list)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Creating neighbor comparisons"
+## [1] "Finding valid comparisons"
+## [1] "Using inputted list of cell data"
+## [1] "Running comparisons"
+\end{verbatim}
+
+\hypertarget{compiling-ssf-comparisons-2}{%
+\subsubsection{Compiling SSF
+comparisons}\label{compiling-ssf-comparisons-2}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ssf.comparisons }\OtherTok{\textless{}{-}} \FunctionTok{compile\_ssf\_comparisons}\NormalTok{(sparse.neighbors, cell.data)}
+
+\NormalTok{ssf.comparisons }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(ssf.comparisons, }\ControlFlowTok{function}\NormalTok{(x) \{}
+\NormalTok{  x}\SpecialCharTok{$}\NormalTok{.for}\SpecialCharTok{$}\NormalTok{log\_sl }\OtherTok{\textless{}{-}} \FunctionTok{log}\NormalTok{(x}\SpecialCharTok{$}\NormalTok{.for}\SpecialCharTok{$}\NormalTok{step}\SpecialCharTok{+}\DecValTok{1}\NormalTok{)}
+\NormalTok{  x}\SpecialCharTok{$}\NormalTok{.given}\SpecialCharTok{$}\NormalTok{log\_sl }\OtherTok{\textless{}{-}} \FunctionTok{log}\NormalTok{(x}\SpecialCharTok{$}\NormalTok{.given}\SpecialCharTok{$}\NormalTok{step}\SpecialCharTok{+}\DecValTok{1}\NormalTok{)}
+  
+\NormalTok{  x}\SpecialCharTok{$}\NormalTok{.for}\SpecialCharTok{$}\NormalTok{cos\_ta }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{  x}\SpecialCharTok{$}\NormalTok{.given}\SpecialCharTok{$}\NormalTok{cos\_ta }\OtherTok{\textless{}{-}} \DecValTok{0}
+  
+  \FunctionTok{list}\NormalTok{(}\AttributeTok{.for =}\NormalTok{ x}\SpecialCharTok{$}\NormalTok{.for, }\AttributeTok{.given =}\NormalTok{ x}\SpecialCharTok{$}\NormalTok{.given)}
+\NormalTok{\})}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{predicting-surface-probabilities-2}{%
+\subsubsection{Predicting surface
+probabilities}\label{predicting-surface-probabilities-2}}
+
+TIDYVERSE BABYYYYYY
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{predicted.surfaces }\OtherTok{\textless{}{-}}\NormalTok{ m2 }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{surfaces =} \FunctionTok{map}\NormalTok{(model, }\ControlFlowTok{function}\NormalTok{(x) \{}
+    \FunctionTok{predict\_ssf\_comparisons}\NormalTok{(x, ssf.comparisons)}
+\NormalTok{  \}))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Estimating probability surface"
+## [1] "Compiling probability surface"
+## [1] "Making sparse matrix for transitions"
+## [1] "Estimating probability surface"
+## [1] "Compiling probability surface"
+## [1] "Making sparse matrix for transitions"
+## [1] "Estimating probability surface"
+## [1] "Compiling probability surface"
+## [1] "Making sparse matrix for transitions"
+## [1] "Estimating probability surface"
+## [1] "Compiling probability surface"
+## [1] "Making sparse matrix for transitions"
+\end{verbatim}
+
+\hypertarget{making-graph-2}{%
+\subsubsection{Making graph}\label{making-graph-2}}
+
+TIDYVERSE AGAIN BABYYYYYY \#roUND 2
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{graphs }\OtherTok{\textless{}{-}}\NormalTok{ predicted.surfaces }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{graph =} \FunctionTok{map}\NormalTok{(surfaces, }\ControlFlowTok{function}\NormalTok{(x) \{}
+\NormalTok{    g }\OtherTok{\textless{}{-}} \FunctionTok{graph\_from\_adjacency\_matrix}\NormalTok{(x}\SpecialCharTok{$}\NormalTok{sparse.matrix, }\AttributeTok{mode =} \StringTok{"directed"}\NormalTok{, }\AttributeTok{weighted =}\NormalTok{ T, }\AttributeTok{diag =}\NormalTok{ T)}
+    \FunctionTok{V}\NormalTok{(g)}\SpecialCharTok{$}\NormalTok{name }\OtherTok{\textless{}{-}} \FunctionTok{V}\NormalTok{(g)}
+\NormalTok{    Isolated }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(}\FunctionTok{degree}\NormalTok{(g)}\SpecialCharTok{==}\DecValTok{0}\NormalTok{)}
+\NormalTok{    Connected }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(}\FunctionTok{degree}\NormalTok{(g)}\SpecialCharTok{\textgreater{}}\DecValTok{0}\NormalTok{)}
+\NormalTok{    g }\OtherTok{\textless{}{-}} \FunctionTok{delete.vertices}\NormalTok{(g, Isolated)}
+\NormalTok{    g }\OtherTok{\textless{}{-}} \FunctionTok{delete.edges}\NormalTok{(g, }\FunctionTok{E}\NormalTok{(g)[}\FunctionTok{is.na}\NormalTok{(weight)])}
+\NormalTok{    g}
+\NormalTok{  \}))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{calculating-centrality-2}{%
+\subsubsection{Calculating centrality}\label{calculating-centrality-2}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{centrality.surface }\OtherTok{\textless{}{-}}\NormalTok{ graphs }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{centrality =} \FunctionTok{map}\NormalTok{(graph, }\ControlFlowTok{function}\NormalTok{(x) \{}
+\NormalTok{    pg }\OtherTok{\textless{}{-}} \FunctionTok{page\_rank}\NormalTok{(x)}
+\NormalTok{    values }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\ConstantTok{NA}\NormalTok{, }\FunctionTok{length}\NormalTok{(mock.surface))}
+\NormalTok{    values[}\FunctionTok{V}\NormalTok{(x)}\SpecialCharTok{$}\NormalTok{name] }\OtherTok{\textless{}{-}}\NormalTok{ pg}\SpecialCharTok{$}\NormalTok{vector}
+\NormalTok{    page.rank.raster }\OtherTok{\textless{}{-}} \FunctionTok{setValues}\NormalTok{(mock.surface, values)}
+\NormalTok{    page.rank.raster}
+\NormalTok{  \}))}
+
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(centrality.surface}\SpecialCharTok{$}\NormalTok{centrality[[}\DecValTok{1}\NormalTok{]]}\SpecialCharTok{\^{}}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\DecValTok{2}\NormalTok{), }\AttributeTok{interpolate =}\NormalTok{ F)}
+\FunctionTok{points}\NormalTok{(centrality.surface}\SpecialCharTok{$}\NormalTok{data[[}\DecValTok{1}\NormalTok{]], }\AttributeTok{pch =} \StringTok{"."}\NormalTok{, }\AttributeTok{col =} \FunctionTok{alpha}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\FloatTok{0.1}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(centrality.surface}\SpecialCharTok{$}\NormalTok{centrality[[}\DecValTok{2}\NormalTok{]], }\AttributeTok{interpolate =}\NormalTok{ F)}
+\FunctionTok{points}\NormalTok{(centrality.surface}\SpecialCharTok{$}\NormalTok{data[[}\DecValTok{2}\NormalTok{]], }\AttributeTok{pch =} \StringTok{"."}\NormalTok{, }\AttributeTok{col =} \FunctionTok{alpha}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\FloatTok{0.1}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(centrality.surface}\SpecialCharTok{$}\NormalTok{centrality[[}\DecValTok{3}\NormalTok{]], }\AttributeTok{interpolate =}\NormalTok{ F)}
+\FunctionTok{points}\NormalTok{(centrality.surface}\SpecialCharTok{$}\NormalTok{data[[}\DecValTok{3}\NormalTok{]], }\AttributeTok{pch =} \StringTok{"."}\NormalTok{, }\AttributeTok{col =} \FunctionTok{alpha}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\FloatTok{0.1}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(centrality.surface}\SpecialCharTok{$}\NormalTok{centrality[[}\DecValTok{4}\NormalTok{]], }\AttributeTok{interpolate =}\NormalTok{ F)}
+\FunctionTok{points}\NormalTok{(centrality.surface}\SpecialCharTok{$}\NormalTok{data[[}\DecValTok{4}\NormalTok{]], }\AttributeTok{pch =} \StringTok{"."}\NormalTok{, }\AttributeTok{col =} \FunctionTok{alpha}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\FloatTok{0.1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Untitled_files/figure-latex/unnamed-chunk-54-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cor}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(}\FunctionTok{values}\NormalTok{(centrality.surface}\SpecialCharTok{$}\NormalTok{centrality[[}\DecValTok{1}\NormalTok{]]), }
+          \FunctionTok{values}\NormalTok{(centrality.surface}\SpecialCharTok{$}\NormalTok{centrality[[}\DecValTok{2}\NormalTok{]]),}
+          \FunctionTok{values}\NormalTok{(centrality.surface}\SpecialCharTok{$}\NormalTok{centrality[[}\DecValTok{3}\NormalTok{]]),}
+          \FunctionTok{values}\NormalTok{(centrality.surface}\SpecialCharTok{$}\NormalTok{centrality[[}\DecValTok{4}\NormalTok{]])),}
+    \AttributeTok{use =} \StringTok{"pairwise.complete"}\NormalTok{,}
+    \AttributeTok{method =} \StringTok{"spearman"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           [,1]      [,2]      [,3]      [,4]
+## [1,] 1.0000000 0.3559888 0.5015261 0.7121948
+## [2,] 0.3559888 1.0000000 0.7852601 0.3712916
+## [3,] 0.5015261 0.7852601 1.0000000 0.4463302
+## [4,] 0.7121948 0.3712916 0.4463302 1.0000000
+\end{verbatim}
+
+\hypertarget{comparing-rsf-to-ssf-surfaces-2}{%
+\subsubsection{Comparing RSF to SSF
+surfaces}\label{comparing-rsf-to-ssf-surfaces-2}}
+
+Here, we are leveraging the fact that there are other fisher that we
+never modeled to test our inferences.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{comparison }\OtherTok{\textless{}{-}}\NormalTok{ processed}
+
+\NormalTok{extracted }\OtherTok{\textless{}{-}}\NormalTok{ raster}\SpecialCharTok{::}\FunctionTok{extract}\NormalTok{(}\FunctionTok{stack}\NormalTok{(centrality.surface}\SpecialCharTok{$}\NormalTok{centrality), }\FunctionTok{as.matrix}\NormalTok{(comparison[,}\FunctionTok{c}\NormalTok{(}\StringTok{"x.1"}\NormalTok{, }\StringTok{"y.1"}\NormalTok{)]), }\AttributeTok{df=}\ConstantTok{TRUE}\NormalTok{)}
+  
+\NormalTok{quantiles }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(centrality.surface}\SpecialCharTok{$}\NormalTok{centrality, }\ControlFlowTok{function}\NormalTok{(x)\{}
+    \FunctionTok{quantile}\NormalTok{(}\FunctionTok{values}\NormalTok{(x), }\FunctionTok{seq}\NormalTok{(}\FloatTok{0.01}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{by =} \FloatTok{0.01}\NormalTok{), }\AttributeTok{na.rm =}\NormalTok{ T)}
+\NormalTok{  \})}
+
+\NormalTok{percent.in}\FloatTok{.1} \OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{100}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{(}\FunctionTok{length}\NormalTok{(percent.in}\FloatTok{.1}\NormalTok{)))\{}
+\NormalTok{  yup }\OtherTok{\textless{}{-}}\NormalTok{ extracted}\SpecialCharTok{$}\NormalTok{layer}\FloatTok{.1} \SpecialCharTok{\textless{}=}\NormalTok{ quantiles[[}\DecValTok{1}\NormalTok{]][i]}
+\NormalTok{  percent.in}\FloatTok{.1}\NormalTok{[i] }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(yup, }\AttributeTok{na.rm =}\NormalTok{ T)}
+\NormalTok{\}}
+\NormalTok{percent.in}\FloatTok{.1} \OtherTok{\textless{}{-}}\NormalTok{ percent.in}\FloatTok{.1}\SpecialCharTok{/}\FunctionTok{table}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(extracted}\SpecialCharTok{$}\NormalTok{layer}\FloatTok{.1}\NormalTok{))[}\DecValTok{1}\NormalTok{]}
+
+\NormalTok{percent.in}\FloatTok{.2} \OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{100}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{(}\FunctionTok{length}\NormalTok{(percent.in}\FloatTok{.2}\NormalTok{)))\{}
+\NormalTok{  yup }\OtherTok{\textless{}{-}}\NormalTok{ extracted}\SpecialCharTok{$}\NormalTok{layer}\FloatTok{.2} \SpecialCharTok{\textless{}=}\NormalTok{ quantiles[[}\DecValTok{1}\NormalTok{]][i]}
+\NormalTok{  percent.in}\FloatTok{.2}\NormalTok{[i] }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(yup, }\AttributeTok{na.rm =}\NormalTok{ T)}
+\NormalTok{\}}
+\NormalTok{percent.in}\FloatTok{.2} \OtherTok{\textless{}{-}}\NormalTok{ percent.in}\FloatTok{.2}\SpecialCharTok{/}\FunctionTok{table}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(extracted}\SpecialCharTok{$}\NormalTok{layer}\FloatTok{.2}\NormalTok{))[}\DecValTok{1}\NormalTok{]}
+
+\NormalTok{percent.in}\FloatTok{.3} \OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{100}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{(}\FunctionTok{length}\NormalTok{(percent.in}\FloatTok{.3}\NormalTok{)))\{}
+\NormalTok{  yup }\OtherTok{\textless{}{-}}\NormalTok{ extracted}\SpecialCharTok{$}\NormalTok{layer}\FloatTok{.3} \SpecialCharTok{\textless{}=}\NormalTok{ quantiles[[}\DecValTok{1}\NormalTok{]][i]}
+\NormalTok{  percent.in}\FloatTok{.3}\NormalTok{[i] }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(yup, }\AttributeTok{na.rm =}\NormalTok{ T)}
+\NormalTok{\}}
+\NormalTok{percent.in}\FloatTok{.3} \OtherTok{\textless{}{-}}\NormalTok{ percent.in}\FloatTok{.3}\SpecialCharTok{/}\FunctionTok{table}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(extracted}\SpecialCharTok{$}\NormalTok{layer}\FloatTok{.3}\NormalTok{))[}\DecValTok{1}\NormalTok{]}
+
+\NormalTok{percent.in}\FloatTok{.4} \OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{100}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{(}\FunctionTok{length}\NormalTok{(percent.in}\FloatTok{.4}\NormalTok{)))\{}
+\NormalTok{  yup }\OtherTok{\textless{}{-}}\NormalTok{ extracted}\SpecialCharTok{$}\NormalTok{layer}\FloatTok{.4} \SpecialCharTok{\textless{}=}\NormalTok{ quantiles[[}\DecValTok{1}\NormalTok{]][i]}
+\NormalTok{  percent.in}\FloatTok{.4}\NormalTok{[i] }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(yup, }\AttributeTok{na.rm =}\NormalTok{ T)}
+\NormalTok{\}}
+\NormalTok{percent.in}\FloatTok{.4} \OtherTok{\textless{}{-}}\NormalTok{ percent.in}\FloatTok{.4}\SpecialCharTok{/}\FunctionTok{table}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(extracted}\SpecialCharTok{$}\NormalTok{layer}\FloatTok{.4}\NormalTok{))[}\DecValTok{1}\NormalTok{]}
+
+\FunctionTok{tibble}\NormalTok{(}\AttributeTok{percent\_pred =} \FunctionTok{rep}\NormalTok{(}\FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{by =} \FloatTok{0.01}\NormalTok{)[}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{],}\DecValTok{4}\NormalTok{),}
+       \AttributeTok{precent\_obs =} 
+         \CommentTok{\# c(NA,diff(percent.in.1),}
+         \CommentTok{\#   NA,diff(percent.in.2),}
+         \CommentTok{\#   NA,diff(percent.in.3),}
+         \CommentTok{\#   NA,diff(percent.in.4)),}
+         \FunctionTok{c}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{percent.in}\FloatTok{.1}\NormalTok{,}
+           \DecValTok{1}\SpecialCharTok{{-}}\NormalTok{percent.in}\FloatTok{.2}\NormalTok{,}
+           \DecValTok{1}\SpecialCharTok{{-}}\NormalTok{percent.in}\FloatTok{.3}\NormalTok{,}
+           \DecValTok{1}\SpecialCharTok{{-}}\NormalTok{percent.in}\FloatTok{.4}\NormalTok{),}
+       \AttributeTok{pred\_type =} \FunctionTok{rep}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{"Animal"}\NormalTok{, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{4}\NormalTok{), }
+                       \AttributeTok{each =} \DecValTok{100}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{group\_by}\NormalTok{(pred\_type) }\SpecialCharTok{\%\textgreater{}\%} 
+  \CommentTok{\# mutate(cum\_percent = cumsum(precent\_obs)) \%\textgreater{}\% }
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ percent\_pred, }\AttributeTok{y =}\NormalTok{ precent\_obs, }\AttributeTok{color =}\NormalTok{ pred\_type)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"Percentile of Predicted Surface"}\NormalTok{,}
+       \AttributeTok{y =} \StringTok{"Cumulative Percent of Observed Data by Percentile"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Untitled_files/figure-latex/unnamed-chunk-55-1.pdf}
+
+Variation in animal predictions!!! Super cooooooool
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pheno }\OtherTok{\textless{}{-}}\NormalTok{ processed[processed}\SpecialCharTok{$}\NormalTok{ID }\SpecialCharTok{\%in\%}\NormalTok{ four.ind}\SpecialCharTok{$}\NormalTok{id,]}
+\FunctionTok{as.data.frame}\NormalTok{(pheno) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{distinct}\NormalTok{(ID,sex, age) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         ID sex   age
+## 1 282_2008   F    11
+## 2 593_2008   F Adult
+## 3 600_2007   F     2
+## 4 677_2005   M     5
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(centrality.surface}\SpecialCharTok{$}\NormalTok{centrality[[}\DecValTok{1}\NormalTok{]]}\SpecialCharTok{\textgreater{}}\NormalTok{quantiles[[}\DecValTok{1}\NormalTok{]][}\FunctionTok{min}\NormalTok{(}\FunctionTok{which}\NormalTok{((}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{percent.in}\FloatTok{.1}\NormalTok{) }\SpecialCharTok{\textless{}} \FloatTok{0.5}\NormalTok{))])}
+\FunctionTok{points}\NormalTok{(comparison}\SpecialCharTok{$}\NormalTok{x\_, comparison}\SpecialCharTok{$}\NormalTok{y\_, }\AttributeTok{pch =} \StringTok{"."}\NormalTok{, }\AttributeTok{col =} \FunctionTok{alpha}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\AttributeTok{alpha =} \DecValTok{1}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(centrality.surface}\SpecialCharTok{$}\NormalTok{centrality[[}\DecValTok{2}\NormalTok{]]}\SpecialCharTok{\textgreater{}}\NormalTok{quantiles[[}\DecValTok{2}\NormalTok{]][}\FunctionTok{min}\NormalTok{(}\FunctionTok{which}\NormalTok{((}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{percent.in}\FloatTok{.2}\NormalTok{) }\SpecialCharTok{\textless{}} \FloatTok{0.5}\NormalTok{))])}
+\FunctionTok{points}\NormalTok{(comparison}\SpecialCharTok{$}\NormalTok{x\_, comparison}\SpecialCharTok{$}\NormalTok{y\_, }\AttributeTok{pch =} \StringTok{"."}\NormalTok{, }\AttributeTok{col =} \FunctionTok{alpha}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\AttributeTok{alpha =} \DecValTok{1}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(centrality.surface}\SpecialCharTok{$}\NormalTok{centrality[[}\DecValTok{3}\NormalTok{]]}\SpecialCharTok{\textgreater{}}\NormalTok{quantiles[[}\DecValTok{3}\NormalTok{]][}\FunctionTok{min}\NormalTok{(}\FunctionTok{which}\NormalTok{((}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{percent.in}\FloatTok{.3}\NormalTok{) }\SpecialCharTok{\textless{}} \FloatTok{0.5}\NormalTok{))])}
+\FunctionTok{points}\NormalTok{(comparison}\SpecialCharTok{$}\NormalTok{x\_, comparison}\SpecialCharTok{$}\NormalTok{y\_, }\AttributeTok{pch =} \StringTok{"."}\NormalTok{, }\AttributeTok{col =} \FunctionTok{alpha}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\AttributeTok{alpha =} \DecValTok{1}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(centrality.surface}\SpecialCharTok{$}\NormalTok{centrality[[}\DecValTok{4}\NormalTok{]]}\SpecialCharTok{\textgreater{}}\NormalTok{quantiles[[}\DecValTok{4}\NormalTok{]][}\FunctionTok{min}\NormalTok{(}\FunctionTok{which}\NormalTok{((}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{percent.in}\FloatTok{.4}\NormalTok{) }\SpecialCharTok{\textless{}} \FloatTok{0.5}\NormalTok{))])}
+\FunctionTok{points}\NormalTok{(comparison}\SpecialCharTok{$}\NormalTok{x\_, comparison}\SpecialCharTok{$}\NormalTok{y\_, }\AttributeTok{pch =} \StringTok{"."}\NormalTok{, }\AttributeTok{col =} \FunctionTok{alpha}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\AttributeTok{alpha =} \DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Untitled_files/figure-latex/unnamed-chunk-56-1.pdf}
+
+\end{document}

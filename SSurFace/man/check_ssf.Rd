@@ -4,7 +4,7 @@
 \alias{check_ssf}
 \title{check_ssf}
 \usage{
-check_ssf(x)
+check_ssf(ssf.obj)
 }
 \value{
 Logical

@@ -1,0 +1,1523 @@
+---
+title: "Problem"
+output:
+  pdf_document:
+    toc: true
+    number_sections: true
+  html_document:
+    toc: true
+    toc_float: true
+date: "2022-12-23"
+---
+
+# Package overview(?)
+
+## Dependencies
+These would need need to be imported in finalized package
+```{r}
+library(tidyverse)
+library(lubridate)
+library(amt)
+library(raster)
+library(parallel)
+library(data.table)
+library(Matrix)
+library(progress)
+library(pbapply)
+library(pbmcapply)
+library(igraph)
+```
+
+## Create the surface prediction
+To side-step issues where rasters are of different resolution, we can create our own custom grid for predictions that match the most confined extents of the rasters. We also might want to specify the resolution of that underlying raster. If that raster is in utm (as defined below), we can specify x and y cell sizes 
+```{r}
+create_mock_surface <- function(raster.list, multiple.extents = F, resolution = list(x = 100, y = 100)){
+  
+  # If rasters are all of the same extent, take the extent
+  if(multiple.extents == F){
+    xmin <- extent(raster.list)[1]
+    xmax <- extent(raster.list)[2]
+    ymin <- extent(raster.list)[3]
+    ymax <- extent(raster.list)[4]
+  }
+  
+  # If rasters are of different extent, take the overlap extent
+  if(multiple.extents == T){
+    xmin <- max(unlist(lapply(raster.list, function(x) {extent(x)[1]})))
+    xmax <- max(unlist(lapply(raster.list, function(x) {extent(x)[2]})))
+    ymin <- max(unlist(lapply(raster.list, function(x) {extent(x)[3]})))
+    ymax <- max(unlist(lapply(raster.list, function(x) {extent(x)[4]})))
+  }
+  
+  # Create new raster 
+  mock.surface <- raster(
+    ncol=(xmax-xmin)/resolution$x, # raster automatically rounds, total cols
+    nrow=(ymax-ymin)/resolution$y, # raster automatically rounds, total rows
+    xmn=xmin, # min x exent
+    xmx=xmax, # max x exent
+    ymn=ymin, # min y exent
+    ymx=ymax, # max y exent
+    crs = crs(raster.list[[1]])) # take CRS from first raster, requires that rasters match in CRS
+  
+  values(mock.surface) <- 1:(ncol(mock.surface)*nrow(mock.surface)) # not important, just for visualization
+  
+  return(mock.surface)
+}
+
+```
+
+## Check model input
+We should check that a model is correctly specified, before throwing errors down the line.
+```{r}
+check_ssf <- function(ssf.obj) {
+  inherits(ssf.obj, c("fit_clogit")) # not broad enough, basically just from smt at the moment
+}
+
+```
+
+## Find reasonable step distances for neighborhoods down the line
+We should create a reasonable null step, and we can do so by using the estimated gamma distribution from amt. However, we could just as easily take quantiles from the distribution of step lengths we observe, instead.
+```{r}
+step_distance <- function(ssf.obj, quantile) {
+  if(!check_ssf(ssf.obj)) stop("Check that SSF model is valid")
+  
+  step <- qgamma(quantile, # user specified quantile
+                 shape = ssf.obj$sl_$params$shape, # estimated from amt
+                 scale = ssf.obj$sl_$params$scale) # estimated from amt
+  
+  return(step)
+}
+```
+
+
+## Get data from prediction surface
+Now that we have a valid SSF object and a prediction surface, we need to find our prediction cells of interest. Lets get our raster data. 
+```{r}
+get_cells <- function(ssf.obj, mock.surface, raster, accessory.x.preds = NULL){
+  if(!check_ssf(ssf.obj)) stop("Check that SSF model is valid")
+  
+  pred.xy <- raster::coordinates(mock.surface) # get coordinates from grid we created
+  
+  predict.data <- data.frame(cbind(pred.xy, raster::extract(raster, pred.xy, df=TRUE))) # makes raster values a data frame
+  
+  predict.data$step_id_unique = ssf.obj$model$xlevels$`strata(step_id_)`[1] # fix the strata to something reasonable
+  
+  if(!is.null(accessory.x.preds)) {
+    predict.data <- cbind(predict.data, accessory.x.preds) # this adds extraneous x values that are not in matrix
+  }
+  
+  cells <- nrow(pred.xy) # number of cells
+  
+  predict.data$cellnr <- 1:cells # assign cell numbers, redundant of ID
+  
+  return(predict.data)
+}
+```
+
+## Check possible prediction surfaces
+Not all combinations of parameter space are valid, and we often are missing raster data at edges
+```{r}
+get_cell_data <- function(ssf.obj, pred.data){
+  if(!check_ssf(ssf.obj)) stop("Check that SSF model is valid")
+  
+  cells <- nrow(pred.data) # number of cells
+  
+  # relying on amt step-selection models, we can predict log-RSS
+  # there are better ways to predict, but this is simple
+  log.rss <- amt::log_rss(ssf.obj, # the model
+                          pred.data, # the raster data (including missing values)
+                          pred.data %>% 
+                            drop_na() %>% 
+                            sample_n(1),  # a row of the raster data (excluding missing values)
+                          ci = NA) 
+  
+  full.raster.data <- data.frame(pred.data, lRSS = log.rss$df$log_rss) # bind predictions to the original data
+  
+  return(full.raster.data)
+  
+}
+
+```
+
+## We need a quick way to find values for comparison
+We need to find neighbors of cells in our matrix. This is easy, but could require n^3 comparisons. So many comparisons are computationally inefficient. One thing we can rely on is that all cells in a raster (or matrix) can be indexed. Additionally, distances between cells in a raster are repetitive. In general, there are only ~0.2% unique pairwise distances between cell indices. We can find these unique distances because we know the difference in index of the comparisons, the column identify of the minimum index, and the observed distance. This allows us to have a table that we can call repetitively instead of recalculating millions of distances.
+```{r}
+neighbor_lookup <- function(mock.surface, cell.data, cell.data.list = NULL){
+  cols <- mock.surface@ncols # columns in prediction
+  rows <- mock.surface@nrows # rows in prediction
+  cells <- cols*rows # number of cells
+  index <- 1:cells # all index values in our prediction raster
+  
+  # create a matrix for each column in the first row and its comparisons to distance to all other cells 
+  
+  # if(is.null(cell.data.list)){
+  #   print("Splitting cell.data into list")
+  #   cell.data.list. <- split(cell.data, cell.data$cellnr) # split the prediction data into row-wise lists to use lapply
+  # }
+  # 
+  # if(!is.null(cell.data.list)){
+  #   print("Using inputted list of cell data")
+  #   cell.data.list. <- cell.data.list # split the prediction data into row-wise lists to use lapply
+  # }
+    
+  # this is a progress bar we can use in a for loop
+  pb <- progress_bar$new(format = "(:spin) [:bar] :percent [Elapsed time: :elapsedfull || Estimated time remaining: :eta]", total = cols, complete = "=", incomplete = "-", current = ">", clear = FALSE, width = 100)
+  
+  for(i in 1:cols) { # step through columns
+    dist <- pointDistance(cell.data[i,c("x","y")], # choose the first row cell by column (raster indices are row-wise)
+                            cell.data[i:cells,c("x","y")], # choose all other cells
+                            lonlat = F) # we are using UTM 
+    if(i == 1) mat.dist <- matrix(dist, ncol = 1)
+    if(i > 1) mat.dist <- cbind(mat.dist, c(dist, rep(NA, i-1))) # for each additional column, there are i-1 comparisons that are repeated (unnecessary)
+    pb$tick() # for progress bar
+  }
+  
+  return(mat.dist)
+}
+
+```
+
+## Find neighbors within distance 
+Now that we have our call-up table, we can use it to generate neighbors. This is arguably one of the most taxing (computationally) steps of the whole process. Luckily im a damn genius and found ways to make this even faster than the call-up table. 
+```{r}
+neighbor_finder <- function(ssf.obj = m2, cell.data, neighbors.found, quantile = 0.99, cell.data.list = NULL, distance.override = NULL){
+  
+  if(is.null(distance.override)) neighborhood.distance <- step_distance(ssf.obj, quantile) # take the X% step distance as your neighborhood 
+  
+  if(!is.null(distance.override)) neighborhood.distance <- distance.override
+  
+  cols <- ncol(neighbors.found) # columns of our call-up table
+  differences <- nrow(neighbors.found) # number of differences in index values 
+  
+  print("Creating neighbor comparisons")
+  vector <- c(neighbors.found) # convert the neighbors to a vector we can index later, this is the purpose of all those NA's earlier based on i-1 unique distances
+  
+  print("Finding valid comparisons")
+  valid <- vector < neighborhood.distance # T/F whether those neighborhood distances are less than our threshold
+  
+  if(is.null(cell.data.list)){
+    print("Splitting cell.data into list")
+    cell.data.list. <- split(cell.data, cell.data$cellnr) # split the prediction data into row-wise lists to use lapply
+  }
+  
+  if(!is.null(cell.data.list)){
+    print("Using inputted list of cell data")
+    cell.data.list. <- cell.data.list # split the prediction data into row-wise lists to use lapply
+  }
+  
+  print("Running comparisons")
+  neighbor.mat <- pblapply(cell.data.list., function(x){ # step through each row (see list split above)
+    focal <- as.numeric(x$cellnr) # value of row cell number 
+    delta <- abs(focal - cell.data$cellnr) # difference in row cell number vs all others
+    index <- ifelse(focal < cell.data$cellnr, focal, cell.data$cellnr) # report the minimum cell index (based on our call-up structure)
+    
+    index.col <- index%%cols # use the remainder function to get the column number (see below, we have to force zeros to the column number because the remainder of the final column is zero)
+    
+    df <- data.frame(difference = delta + 1, # we have to add one because differences of 0 are stored in row 1, differences of 1 in row 2, etc. 
+                     col = ifelse(index.col == 0, cols, index.col), # forcing remainders of zero the number of columns
+                     cell.nr = cell.data$cellnr) # just tracking the cell number we are comparing against for use later
+    
+    # filter the data frame based on whether our call-up values are less than the neighborhood
+    df <- df %>% 
+      filter(valid[difference+((col-1)*differences)]) 
+    
+    # filter the data set to unique rows and columns for call-up (to accommodate memory issues)
+    df.distinct <- df %>% distinct(difference, col) 
+    
+    # find the unique distances (trims time down)
+    df.distinct$distances <- vector[df.distinct$difference + ((df.distinct$col - 1)*differences)]
+    
+    # throw the unique distances back to the full data set 
+    df <- merge(df, df.distinct, by = c("difference","col"))
+    
+    # package into a nice data frame for export
+    data.frame(row = focal, column = df$cell.nr, distance = df$distances)
+  })
+  
+  # bind the output list
+  neighbors <- rbindlist(neighbor.mat)
+  
+  # create a sparse matrix based on the focal id, alternate id, and distance
+  sparse.neighbors <- sparseMatrix(i = neighbors$row, j = neighbors$column, x = neighbors$distance)
+  
+  # return both the matrix and the unbound list of neighbor cells
+  return(list(matrix = sparse.neighbors, by.cell = neighbor.mat))
+}
+```
+
+## We need to split data into focal and neighbor groups
+Now that we have data divided so that we know the neighbors of a focal cell, we can split the data into a format that is conducive to SSF predictions. We split these into two data frames, `.given` for the focal cell and `.for` for the neighboring cells. 
+```{r}
+compile_ssf_comparisons <- function(sparse.neighbors, cell.data) {
+  
+  # this is why the export of the neighbors as individual lists was important
+  ssf.comparisons <- lapply(sparse.neighbors$by.cell, function(x){ 
+    baseline <- cell.data[x$column[which(x$distance == 0)],] # baseline will have a distance of zero (focal)
+    
+    baseline$step <- 0 # create a variable "step" that records this zero distance
+    
+    alternate <- cell.data[x$column,] # grab all the other cell.data for neighboring cells (including focal cell)
+    
+    alternate$step <- x$distance # force distance to this new variable step
+    
+    list(.given = baseline, .for = alternate) # return a list of focal and neigboring cell data
+    
+  })
+  
+  return(ssf.comparisons)
+}
+```
+
+## Now we need to predict our surface
+Using our fit movement model and the metadata for our prediction surface, we can estimate the relative risk of selecting the focal cell and all other cells in the neighborhood. We can show that all probabilities of "choosing" a cell in the prediction surface must sum to one, thus the probability of selecting the focal cell is the inverse of he sum of all relative probabilites. From log-RSS, we just exponentiate, and take the inverse sum. To find the probability of choosing all cells, we just multiply the probability of selecting the focal cell against all relative risks! Easy! This tells us the probability of selecting each of those cells given the comparison to the focal cell, so not the out-right probability of selection, but it gets us closer. 
+```{r}
+predict_ssf_comparisons <- function(ssf.obj = issf.fit, ssf.comparisons) {
+  
+  print("Estimating probability surface")
+  
+  prediction.list <- pbmclapply(ssf.comparisons, function(x){ # step through the list of SSF objects
+    log.rss <- log_rss(ssf.obj, x$.for, x$.given, ci = "se") # get the log-RSS for each comparison
+    x$.for$log_rss <- log.rss$df$log_rss
+    x$.for$Prob <- exp(log.rss$df$log_rss)*(1/sum(exp(log.rss$df$log_rss))) # exponentiate and multiply against relative risk
+    x$.for$Prob.l <- exp(log.rss$df$lwr)*(1/sum(exp(log.rss$df$lwr))) # exponentiate and multiply against relative risk
+    x$.for$Prob.h <- exp(log.rss$df$upr)*(1/sum(exp(log.rss$df$upr))) # exponentiate and multiply against relative risk
+    x$.for # return the data frame with probabilities
+  })
+  
+  print("Compiling probability surface")
+  
+  for(i in 1:length(prediction.list)){
+    prediction.list[[i]]$focal.cell <- i # specify the focal cell for each comparison
+  } 
+  
+  print("Making sparse matrix for transitions")
+  bound <- rbindlist(prediction.list) # bind all data frames 
+  
+  # use indexing to make a massive sparse matrix quickly 
+  Sparse.Matrix.lrss <- sparseMatrix(bound$focal.cell, bound$cellnr, x = bound$log_rss)
+  Sparse.Matrix <- sparseMatrix(bound$focal.cell, bound$cellnr, x = bound$Prob) 
+  Sparse.Matrix.l <- sparseMatrix(bound$focal.cell, bound$cellnr, x = bound$Prob.l) 
+  Sparse.Matrix.h <- sparseMatrix(bound$focal.cell, bound$cellnr, x = bound$Prob.h) 
+  
+  # return the prediction list and sparse matrix
+  return(list(prob.surface = prediction.list, lrss.smatrix = Sparse.Matrix.lrss, sparse.matrix = Sparse.Matrix, sparse.matrix.l = Sparse.Matrix.l, sparse.matrix.h = Sparse.Matrix.h))  
+}
+```
+
+## Make subgraphs for other centrality estimations
+```{r}
+grab_subgraph_betweenness <- function(pred.surf.comp, new.neighborhood = NULL){
+  
+  # Combining predicted Surfaces
+  combined <- rbindlist(pred.surf.comp$prob.surface)
+  n <- length(pred.surf.comp$prob.surface)
+  
+  mat <- pred.surf.comp$sparse.matrix
+  
+  cent.vec <- rep(NA, n)
+  
+  pb <- progress_bar$new(format = "(:spin) [:bar] :percent [Elapsed time: :elapsedfull || Estimated time remaining: :eta]", total = n, complete = "=", incomplete = "-", current = ">", clear = FALSE, width = 100)
+  
+  for (i in 1:n) {
+    if(!is.null(new.neighborhood)) closer <- pred.surf.comp$prob.surface[[i]] %>% filter(step < new.neighborhood)
+    if(is.null(new.neighborhood)) closer <- pred.surf.comp$prob.surface[[i]]
+    
+    neighbors <- closer$ID
+    
+    mat.sub <- mat[neighbors,neighbors]
+    
+    g <- graph_from_adjacency_matrix(mat.sub, mode = "directed", weighted = T, diag = T)
+    V(g)$name <- neighbors
+    
+    # g <- delete.edges(g, E(g)[is.na(E(g)$weight)])
+    
+    index <- which(neighbors == closer$focal.cell[1])
+    
+    # cent.vec. <- closeness(g, mode = "in")
+    cent.vec. <- betweenness(g, directed = TRUE, weights = E(g)$weight, normalized = T)
+    cent.vec[i] <- cent.vec.[index]
+    
+    pb$tick()
+  }
+
+  return(cent.vec)
+}
+
+
+```
+
+
+# Package applications(?)
+
+## Simulation
+```{r}
+set.seed(100)
+library(prioritizr)
+grid <- expand.grid(x = 1:100, y = 1:100)
+grid$z <- 1
+r <- raster::rasterFromXYZ(grid)
+sim <- simulate_data(r, n = 4, scale = .6, sd = 0.01)
+sim <- round(sim, 3)
+plot(sim)
+```
+
+```{r}
+
+beta<-runif(4,-3,3)        # beta_1 from Equation (S.4) in Supplementary Appendix A
+sim.values = values(sim)
+sur.val <- (beta[1]*sim.values[,1] + beta[2]*sim.values[,2] + beta[3]*sim.values[,3] + beta[4]*sim.values[,4] )
+sim.sur <- setValues(sim[[1]], sur.val)
+plot(sim.sur)
+```
+
+```{r}
+# state.switch.rt = 0.01
+# state.switch.tr = 0.25
+lambda<- 1      # lambda from Equation (S.4) in Supplementary Appendix A
+kappa <- 1
+step_no <- 10000   # number of steps to be simulated
+
+locations <- matrix(NA, nrow = step_no, ncol = 2)
+
+spts <- as.data.frame(rasterToPoints(sim, spatial = TRUE))
+locations[1,1] <- spts[sample(1:nrow(spts), 1),]$x
+locations[1,2] <- spts[sample(1:nrow(spts), 1),]$y
+
+# Simulate path
+alpha_x = 0
+state = "R"
+for(step in 1:step_no)
+{
+  
+  if(step == 1) {
+    newxy<-sample(1:nrow(spts), 1, prob=exp(sur.val))
+    locations[step,] <- xyFromCell(sim, newxy)
+    next
+  }
+  
+  # if(state[step-1] == "R") switch <- rbinom(n = 1, size = 1, prob = state.switch.rt)
+  # if(state[step-1] == "T") switch <- rbinom(n = 1, size = 1, prob = state.switch.tr)
+  
+  # if(switch == 0) state = c(state,state[step-1])
+  # if(switch == 1 &
+  #    state[step-1] == "R") state = c(state,"T")
+  #  if(switch == 1 &
+  #    state[step-1] == "T") state = c(state,"R")
+  #  
+  #  if(state[step] == "R") {
+  #    lambda. <- lambda*3
+  #    kappa. <- kappa/3
+  #    sur.val. <- sur.val*3
+  #  }
+  #  
+  #  if(state[step] == "T") {
+  #    lambda. <- lambda/3
+  #    kappa. <- kappa*3
+  #    sur.val. <- sur.val/3
+  #  }
+  
+  alpha_z<-atan2(spts$y-locations[step-1,2],spts$x-locations[step-1,1])
+  unnorm_mk<-exp(-lambda*sqrt((spts$x-locations[step-1,1])^2+(spts$y-locations[step-1,2])^2) + 
+                   sur.val + 
+                   kappa*cos(alpha_x-alpha_z))
+  # Normalise the movement kernel
+  mk<-unnorm_mk/sum(unnorm_mk)
+  # Draw sample from the movement kernel to find new location
+  newxy<-sample(1:nrow(spts), 1, prob=mk)
+  
+  locations[step,] <- xyFromCell(sim, newxy)
+  
+  alpha_x<-atan2(spts$y-locations[step-1,2],spts$x-locations[step-1,1])
+}
+
+# Plot the layer as a raster
+prob.kern <- exp(sim.sur)/sum(exp(values(sim.sur)))
+plot(prob.kern)
+
+hab.90 <- prob.kern>quantile(prob.kern, 0.9)
+lines(rasterToPolygons(hab.90, dissolve = T))
+
+# Plot the animal locations
+lines(locations, col = alpha("black", 0.3))
+```
+
+```{r}
+locations.df <- as.data.frame(locations)
+locations.df$t <- as.Date(1:nrow(locations.df), origin = "1970-01-01")
+trk <- amt::make_track(locations.df, .x = V1, .y = V2, .t = t)
+
+ssf.dat <- trk %>% 
+  mutate(x_ = x_ + runif(nrow(trk), -0.5, 0.5),
+         y_ = y_ + runif(nrow(trk), -0.5, 0.5)) %>% 
+  steps()
+
+fatter.gamma <- fit_distr(ssf.dat$sl_, "gamma")
+fatter.gamma$params$shape <- fatter.gamma$params$shape/4
+fatter.gamma$params$scale <- fatter.gamma$params$scale*4
+
+ssf.dat <- ssf.dat %>% 
+  mutate(sl_ = sl_) %>% 
+  random_steps(40,
+               sl_distr = fatter.gamma) %>% 
+  extract_covariates(sim) %>% 
+  mutate(log_sl = log(sl_),
+         cos_ta = cos(ta_))
+
+issf.fit <- fit_issf(ssf.dat %>% 
+                       filter(!is.na(z.1),
+                              !is.na(z.1),
+                              !is.na(z.3),
+                              !is.na(z.4)) , case_ ~ (z.1 + z.2 + z.3 + z.4) * poly(sl_,2) + cos_ta + strata(step_id_), model = T)
+# summary(issf.fit)
+
+
+cdplot(factor(ssf.dat$case_)~ssf.dat$log_sl, bw = 1)
+
+
+ggplot(ssf.dat, aes(x = sl_, fill = case_)) +
+  geom_density(alpha = 0.1)
+
+mock.surface <- create_mock_surface(sim, F, list(x = 1, y = 1))
+pred.data <- get_cells(issf.fit, 
+                       mock.surface,
+                       sim, 
+                       accessory.x.preds = list(sl_ = step_distance(issf.fit, .01), 
+                                                cos_ta = 3))
+cell.data <- get_cell_data(issf.fit, pred.data)
+lrss <- setValues(mock.surface, cell.data$lRSS)
+# Plot the layer as a raster
+prob.kern. <- exp(lrss)/sum(exp(values(lrss)))
+plot(prob.kern.)
+
+hab.90. <- prob.kern.>quantile(prob.kern., 0.9)
+lines(rasterToPolygons(hab.90., dissolve = T))
+
+# Plot the animal locations
+lines(locations, col = alpha("black", 0.3))
+```
+
+
+```{r}
+neighbors.found <- neighbor_lookup(mock.surface, cell.data)
+sparse.neighbors <- neighbor_finder(issf.fit, cell.data, neighbors.found, quantile = 0.5, distance.override = 20)
+ssf.comparisons <- compile_ssf_comparisons(sparse.neighbors, cell.data)
+
+ssf.comparisons <- lapply(ssf.comparisons, function(x) {
+  x$.for$log_sl <- ifelse(x$.for$step == 0, log(0.01), log(x$.for$step))
+  x$.given$log_sl <-  ifelse(x$.given$step == 0, log(0.01), log(x$.given$step))
+  
+  x$.for$cos_ta <- -1
+  x$.given$cos_ta <- -1
+  
+  list(.for = x$.for, .given = x$.given)
+})
+surface <- predict_ssf_comparisons(issf.fit, ssf.comparisons)
+surface$prob.surface[[1]]
+
+lrss.matrix <- exp(surface$lrss.smatrix)
+
+c<-1-surface$sparse.matrix
+dim(c)
+
+table(is.na(surface$sparse.matrix))
+
+g <- graph_from_adjacency_matrix(surface$sparse.matrix, mode = "directed", weighted = T, diag = T)
+V(g)$name <- V(g)
+Isolated <- which(degree(g)==0)
+Connected <- which(degree(g)>0)
+if(length(Isolated) > 0){
+  g <- delete.vertices(g, Isolated)
+  g <- delete.edges(g, E(g)[is.na(weight)])
+}
+pg <- page_rank(g)
+ginv <- g
+E(ginv)$weight <- ((1-E(ginv)$weight)/sum(1-E(ginv)$weight))
+invpg <- page_rank(ginv)
+
+eigen <- eigen_centrality(g)
+strength <- strength(g)
+
+eigen.r <- setValues(mock.surface, eigen$vect)
+strength.r <- setValues(mock.surface, strength)
+page.rank.raster <- setValues(mock.surface, pg$vect)
+page.rank.inv.raster <- setValues(mock.surface, invpg$vect)
+plot(page.rank.raster)
+hab.90.pr <- page.rank.raster>quantile(page.rank.raster, 0.50)
+# hab.90.pr <- prob.kern.>quantile(prob.kern., 0.50)
+hab.90 <- prob.kern>quantile(prob.kern, 0.50)
+true.90 <- as.data.frame(rasterToPoints(hab.90))
+pr.90 <- as.data.frame(rasterToPoints(hab.90.pr))
+
+diag.prob <- diag(surface$sparse.matrix)
+dp.raster <- setValues(mock.surface, diag.prob)
+
+x <- colSums(lrss.matrix)
+x <- x/sum(x)
+rss.kernel.raster <- setValues(mock.surface, x)
+
+pred <- stack(prob.kern,page.rank.raster)
+plot(spatialEco::rasterCorrelation(pred$layer.1, pred$layer.2))
+
+require(ggspatial)
+
+merged <- merge(true.90, pr.90, by = c("x", "y"))
+
+merged$color = ifelse(merged$layer.x == 1 & merged$layer.y == 1, "HH", NA)
+merged$color = ifelse(merged$layer.x == 1 & merged$layer.y == 0, "HN", merged$color)
+merged$color = ifelse(merged$layer.x == 0 & merged$layer.y == 1, "NH", merged$color)
+merged$color = ifelse(merged$layer.x == 0 & merged$layer.y == 0, "NN", merged$color)
+
+merged$color. <- factor(merged$color, 
+                       levels = c("HH", "NN", "HN", "NH"), 
+                       labels = c("Agreed Habitat", "Agreed Non-Habitat", "False Negative", "False Positive"), ordered = T)
+
+plot(sim$z.1)
+used <- ssf.dat %>% filter(case_)
+hist(values(sim$z.1))
+hist(used$z.1)
+
+ggplot() +
+  geom_raster(merged, mapping = aes(x = x, y = y, fill = color.), color = NA) +
+  scale_fill_viridis_d() +
+  coord_equal() +
+  labs(subtitle = "Where habitat is >50% Normalized Selection Kernel") + 
+  geom_path(locations.df, mapping = aes(x = V1, y = V2), color = "white", inherit.aes = F, alpha = 0.2)
+
+plot(dp.raster>quantile(values(page.rank.raster),.90))
+plot(eigen.r>quantile(values(eigen.r),.90))
+plot(strength.r>quantile(values(strength.r),.90))
+plot(page.rank.raster>quantile(values(page.rank.raster),.50))
+plot(rss.kernel.raster>quantile(values(rss.kernel.raster),.50))
+plot(prob.kern>quantile(values(prob.kern),.50))
+
+plot(log(values(prob.kern)), log(values(page.rank.raster)))
+
+cor(cbind(values(prob.kern), values(prob.kern.), values(page.rank.raster), values(rss.kernel.raster)), method = "pearson")
+```
+
+
+```{r}
+library(localGibbs)
+library(raster)
+library(ggplot2)
+library(numDeriv)
+library(doParallel)
+
+###############
+## Load data ##
+###############
+# Load movement data
+xy <- locations.df
+xydf <- xy
+
+# Load covariates
+hb <- sim
+lim <- as.vector(extent(hb))
+res <- res(hb)
+# Create list and array of covariates
+hb <- as.list(hb)
+cov <- listToArray(hb)
+
+#########################
+## Normal kernel model ##
+#########################
+set.seed(1)
+# Generate Monte Carlo samples
+MCgrids <- MCsample(nc=50, nz=50, norm=TRUE)
+
+# Multicore doesn't work on Windows
+registerDoParallel(cores = ifelse(Sys.info()[['sysname']] ==  "Windows", 
+                                  yes = 1, no = 15))
+
+ntries <- 50
+allm1 <- foreach(i=1:ntries) {
+    # Randomly-chosen initial parameters
+    beta0 <- runif(4, min=c(1.5,-0.5,-0.5,-2.5), max=c(2.5,0.5,0.5,-1.5))
+    sigma0 <- runif(1, min=0.1, max=0.3)
+    par0 <- c(beta0, log(sigma0))
+    
+    # Fit model
+    m <- optim(par=par0, fn=nllkLG_norm, xy=as.matrix(xy[,1:2]), MCgrids=MCgrids, cov=cov,
+               lim=lim, res=res)
+    
+    return(m)
+}
+
+# Unpack parameter estimates
+allnllk1 <- unlist(lapply(allm1, function(m) m$value))
+allpar1 <- matrix(unlist(lapply(allm1, function(m) m$par)),
+                  nrow = ntries, byrow = TRUE)
+best1 <- which.min(allnllk1)
+betaMLE1 <- m$par[1:4]
+sigmaMLE <- exp(m$par[5])
+
+# Derive Hessian and standard errors for MLE
+h1 <- hessian(func=nllkLG_norm, x=m$par, xy=as.matrix(xy[,1:2]), MCgrids=MCgrids, cov=cov,
+             lim=lim, res=res)
+S1 <- solve(h1)
+se1 <- sqrt(diag(S1))
+cbind(m$par - 1.96*se1, m$par, m$par + 1.96*se1)
+
+# Plot fitted RSF
+
+plot(setValues(sim$z.1, rastRSF(beta=betaMLE1, covlist=covlist)))
+
+# Simulate from fitted normal kernel model
+nsim <- 1e4
+xysim1 <- simLG(nbObs=nsim, beta=betaMLE1, allr=sigmaMLE, covlist=covlist,
+                xy0=as.matrix(xy[1,]), npts=1e3, norm=TRUE)
+simsteps1 <- sqrt(rowSums((xysim1[-1,]-xysim1[-nsim,])^2))
+
+######################################
+## Random availability radius model ##
+######################################
+set.seed(1)
+# Generate Monte Carlo samples
+MCgrids <- MCsample(nr=20, nc=40, nz=40)
+# Distribution of the availability radius
+rdist <- "gamma"
+
+# Multicore doesn't work on Windows
+registerDoParallel(cores = ifelse(Sys.info()[['sysname']] ==  "Windows", 
+                                  yes = 1, no = 8))
+
+ntries <- 50
+allm2 <- foreach(i=1:ntries) %dopar% {
+    # Randomly-chosen initial parameters
+    beta0 <- runif(4, min=c(4,.9,.9,0), max=c(5,1.1,1.1,.5))
+    shape0 <- runif(1, min=4, max=4.5)
+    rate0 <- runif(1, min=1.5, max=2)
+    par0 <- n2w(beta=beta0, rdist=rdist, shape=shape0, rate=rate0)
+    
+    # Fit model
+    m <- optim(par=par0, fn=nllkLG, xy=as.matrix(xy), rdist=rdist, MCgrids=MCgrids, 
+               cov=cov, lim=lim, res=res)
+    
+    return(m)
+}
+
+# Unpack parameter estimates
+allnllk2 <- unlist(lapply(allm2, function(m) m$value))
+allpar2 <- matrix(unlist(lapply(allm2, function(m) m$par)), 
+                  nrow = ntries, byrow=TRUE)
+best2 <- which.min(allnllk2)
+betaMLE2 <- allpar2[best2,1:3]
+shapeMLE <- exp(allpar2[best2,4])
+rateMLE <- exp(allpar2[best2,5])
+
+# Derive Hessian for MLE
+h2 <- hessian(func=nllkLG, x=allpar2[best2,], xy=xy, rdist=rdist,
+             MCgrids=MCgrids, cov=cov, lim=lim, res=res)
+S2 <- solve(h2)
+se2 <- sqrt(diag(S2))
+cbind(allpar2[best2,] - 1.96*se2, allpar2[best2,], allpar2[best2,] + 1.96*se2)
+
+# Simulate from random availability radius model
+nsim <- 1e4
+allr <- rgamma(nsim-1, shape=shapeMLE, rate=rateMLE)
+xysim2 <- simLG(nbObs=nsim, beta=betaMLE2, allr=allr, covlist=covlist,
+                xy0=xy[1,], npts=1e3)
+simsteps2 <- sqrt(rowSums((xysim2[-1,]-xysim2[-nsim,])^2))
+
+####################################
+## Compare simulated step lengths ##
+####################################
+par(mar=c(5,4,0,0)+0.5)
+# Observed steps
+xy <- xy[,1:2]
+steps <- sqrt(rowSums((xy[-1,]-xy[-nrow(xy),])^2))
+# Plot histogram of observed steps
+hist(steps, prob=T, col="grey", border=0, xlim=c(0,1.5), ylim=c(0,6),
+     main="", xlab="Step length (km)", breaks=30)
+# Plot densities of simulated steps
+points(density(simsteps1, from=0, to=1.5), type="l", col="firebrick", lwd=2)
+points(density(simsteps2, from=0, to=1.5), type="l", col="seagreen", lwd=2)
+legend("top", legend=c("Normal kernel", "Random availability radius"),
+       col=c("firebrick","seagreen"), lwd=2, bty="n")
+
+#################
+## Compare AIC ##
+#################
+AIC1 <- 2*(ncol(allpar1) + min(allnllk1))
+AIC2 <- 2*(ncol(allpar2) + nrow(xy) + min(allnllk2))
+```
+
+
+## Deer
+
+This is a demonstration data set from the amt package. Single deer from Northern Europe and a binary forest layer as a covariate.
+
+### Data
+We read in data, create 15 random steps for each real step, and then store forest as a factor, turning angle as cosine(ta) and step length as log plus 1 (this saves us later when we compare to a focal cell with "0" step distance)
+```{r}
+data("deer")
+data("sh_forest")
+polygon.forest <- rasterToPolygons(sh_forest, fun = function(x){x == 1}, n = 16, dissolve = T)
+spts <- rasterToPoints(sh_forest, spatial = TRUE)
+
+dd <- rgeos::gDistance(polygon.forest, as(sh_forest,"SpatialPoints"), byid=TRUE)
+forest_distance <- setValues(sh_forest, dd[,1])
+names(forest_distance) <- "dist.forest"
+sh_forest <- 1-(sh_forest-1)
+rstack <- stack(sh_forest, forest_distance)
+
+sh_forest <- aggregate(rstack, 5, fun=mean)
+
+ssf1 <- deer %>% 
+  steps_by_burst() %>% 
+  random_steps(n_control = 15) %>% 
+  extract_covariates(sh_forest) %>%
+  mutate(cos_ta = cos(ta_),
+         log_sl = log(sl_+1))
+
+par(mfrow = c(1,3))
+plot(rstack)
+plot(ssf1)
+```
+
+### Model
+We can fit a basic movement model; it appears that a forest:step interaction is favored.
+```{r}
+m2 <- ssf1 %>%
+  filter(!is.na(cos_ta)) %>% 
+  fit_clogit(case_ ~ dist.forest + log_sl*sh.forest + strata(step_id_), model = T)
+summary(m2)
+```
+
+### Surface
+We can make our surface for predictions - rememeber, we set initial values to their cell index number.
+```{r}
+mock.surface <- create_mock_surface(sh_forest, F, list(x = 125, y = 125))
+plot(mock.surface)
+lines(deer)
+```
+
+### Getting cell data
+We can get our prediction data. We can set forest to a factor again to get the model predictions to work.
+```{r}
+pred.data <- get_cells(m2, 
+                       mock.surface,
+                       sh_forest, 
+                       accessory.x.preds = list(log_sl = log(step_distance(m2, 0.5)), 
+                                                cos_ta = 1))
+
+pred.data$sh.forest <- 1-(pred.data$sh.forest-1)
+head(pred.data)
+```
+
+### Testing surface
+We can fit our original SSF sensu other publications, where a baseline is chosen and run with. It looks like a RSF, but is it?
+```{r}
+cell.data <- get_cell_data(m2, pred.data)
+plot(setValues(mock.surface, cell.data$lRSS))
+points(deer, pch = ".", col = alpha("black", 0.5))
+global.RSS <- setValues(mock.surface, cell.data$lRSS)
+plot(global.RSS)
+```
+
+### Finding neighbors
+Lets make our neighbor look-up matrix. We can plot it here as a raster, but its shows the general idea.
+```{r}
+neighbors.found <- neighbor_lookup(mock.surface, cell.data)
+plot(raster(neighbors.found))
+```
+
+### Making neighbor comparisons
+We can use our look-up matrix to find all of our neighbors.
+```{r}
+sparse.neighbors <- neighbor_finder(m2, cell.data, neighbors.found, quantile = 0.9)
+```
+
+Here, we can see a few examples of how this works.
+```{r}
+par(mfrow = c(2,3))
+plot(trim(setValues(mock.surface, sparse.neighbors$matrix[sample(1:nrow(sparse.neighbors$matrix), 1),]), values = 0))
+plot(trim(
+    setValues(mock.surface, sparse.neighbors$matrix[sample(1:nrow(sparse.neighbors$matrix), 1),]), 
+    values = 0)
+  )
+plot(
+  trim(
+    setValues(mock.surface, sparse.neighbors$matrix[sample(1:nrow(sparse.neighbors$matrix), 1),]), 
+    values = 0)
+  )
+plot(
+  trim(
+    setValues(mock.surface, sparse.neighbors$matrix[sample(1:nrow(sparse.neighbors$matrix), 1),]), 
+    values = 0)
+  )
+plot(
+  trim(
+    setValues(mock.surface, sparse.neighbors$matrix[sample(1:nrow(sparse.neighbors$matrix), 1),]), 
+    values = 0)
+  )
+plot(
+  trim(
+    setValues(mock.surface, sparse.neighbors$matrix[sample(1:nrow(sparse.neighbors$matrix), 1),]), 
+    values = 0)
+  )
+```
+
+### Compiling SSF comparisons
+We can create all the comparisons between focal and non-focal cells. We need to add some extraneous things like creating our `log_sl` and `cos_ta` values. Again, log plus one for all the step lengths to accommodate zeros. Functionally, our specification of turning angle is BS, but it shouldn't affect inferences. In the future, turning angle could be estimated based on the turning angle (if we wanted to get fancy).
+```{r}
+ssf.comparisons <- compile_ssf_comparisons(sparse.neighbors, cell.data)
+
+ssf.comparisons <- lapply(ssf.comparisons, function(x) {
+  x$.for$log_sl <- log(x$.for$step+1)
+  x$.given$log_sl <- log(x$.given$step+1)
+  
+  x$.for$cos_ta <- 0
+  x$.given$cos_ta <- 0
+  
+  list(.for = x$.for, .given = x$.given)
+})
+
+head(ssf.comparisons$`1`$.for)
+```
+
+### Predicting surface probabilities
+We can now predict our whole surface based on the transition probabilities between each focal and each neighbor cell. We can visualize some below.
+```{r}
+surface <- predict_ssf_comparisons(m2, ssf.comparisons)
+```
+
+We can visualize some below.
+```{r}
+par(mfrow = c(3,4), mai = c(0, 0, 0.1, 0))
+
+plot(trim(setValues(mock.surface, surface$sparse.matrix[sample(1:nrow(surface$sparse.matrix), 1),]), values = 0))
+plot(trim(setValues(mock.surface, surface$sparse.matrix[sample(1:nrow(surface$sparse.matrix), 1),]), values = 0))
+plot(trim(setValues(mock.surface, surface$sparse.matrix[sample(1:nrow(surface$sparse.matrix), 1),]), values = 0))
+plot(trim(setValues(mock.surface, surface$sparse.matrix[sample(1:nrow(surface$sparse.matrix), 1),]), values = 0))
+plot(trim(setValues(mock.surface, surface$sparse.matrix[sample(1:nrow(surface$sparse.matrix), 1),]), values = 0))
+plot(trim(setValues(mock.surface, surface$sparse.matrix[sample(1:nrow(surface$sparse.matrix), 1),]), values = 0))
+plot(trim(setValues(mock.surface, surface$sparse.matrix[sample(1:nrow(surface$sparse.matrix), 1),]), values = 0))
+plot(trim(setValues(mock.surface, surface$sparse.matrix[sample(1:nrow(surface$sparse.matrix), 1),]), values = 0))
+plot(trim(setValues(mock.surface, surface$sparse.matrix[sample(1:nrow(surface$sparse.matrix), 1),]), values = 0))
+plot(trim(setValues(mock.surface, surface$sparse.matrix[sample(1:nrow(surface$sparse.matrix), 1),]), values = 0))
+plot(trim(setValues(mock.surface, surface$sparse.matrix[sample(1:nrow(surface$sparse.matrix), 1),]), values = 0))
+plot(trim(setValues(mock.surface, surface$sparse.matrix[sample(1:nrow(surface$sparse.matrix), 1),]), values = 0))
+```
+
+### Making graph
+We can use these relationships to make a graph. We will trim any NA nodes and edges, but we should record their identity for mapping back to the prediction surface. This graph is absolutely huge, so it not really legible and is not plotted here.
+```{r}
+g <- graph_from_adjacency_matrix(surface$sparse.matrix, mode = "directed", weighted = T, diag = T)
+V(g)$name <- V(g)
+Isolated <- which(degree(g)==0)
+Connected <- which(degree(g)>0)
+g <- delete.vertices(g, Isolated)
+g <- delete.edges(g, E(g)[is.na(weight)])
+# plot(g)
+```
+
+### Calculating centrality
+We can calculate PageRank centrality, which is arguably the closest thing to an RSF-like definition. As you can see, its different than the above RSS surface.
+```{r}
+pg <- page_rank(g)
+page.rank.raster <- setValues(mock.surface, pg$vect)
+plot(page.rank.raster)
+points(deer, pch = ".", col = alpha("black", 0.25))
+```
+
+### Calculating other information for comparison
+We can also calculate other things, like the sum of all probabilities favoring a cell across all pertinent neighbors. Or the diagonal of our transition matrix, which is the probability of selecting a focal cell given the neighborhood. 
+```{r}
+diag <- diag(surface$sparse.matrix)
+sum.prob <- colSums(surface$sparse.matrix)
+sum.m.diag <- sum.prob - diag
+neighbors <- unlist(lapply(ssf.comparisons, function(x) nrow(x$.for)))
+
+par(mfrow = c(2,2), mai = c(0,0,0.2,0))
+plot(setValues(mock.surface, diag), main = "Diagonal")
+plot(setValues(mock.surface, sum.prob), main = "Sum")
+plot(setValues(mock.surface, sum.m.diag), main = "Sum - Diagonal")
+plot(setValues(mock.surface, neighbors), main = "Neighbors")
+```
+
+### Making surfaces from predictions
+Here, we can run with summed probabilities as a first proxy. We can see there are real, tangible differences from PageRank.
+```{r}
+sum.prob.raster <- setValues(mock.surface, sum.prob)
+raster::plot(spatialEco::rasterCorrelation(page.rank.raster, sum.prob.raster))
+points(deer, pch = ".", col = alpha("black", 0.25))
+```
+
+### Making a mock RSF
+We can make a mock RSF, using our deer data set in a super flawed, overfit way. Interestingly, this RSF is PERFECTLY correlated with our prior Log-RSS surface - so pretty cool.
+```{r}
+rsf <- deer %>% 
+  random_points() %>% 
+  extract_covariates(sh_forest)
+
+rsf <- rsf %>% 
+  fit_rsf(case_ ~ sh.forest + dist.forest, model = T) 
+
+probabilities <- exp(predict(rsf$model, newdata = pred.data))/(1+exp(predict(rsf$model, newdata = pred.data)))
+rsf.prob.raster <- setValues(mock.surface, probabilities)
+plot(rsf.prob.raster)
+```
+There are, however, deviations from both the base probabilities and the PageRank
+```{r}
+par(mfrow = c(1,2))
+plot(spatialEco::rasterCorrelation(page.rank.raster, rsf.prob.raster))
+points(deer, pch = ".", col = alpha("black", 0.25), main = "RSF vs PageRank")
+plot(spatialEco::rasterCorrelation(global.RSS, rsf.prob.raster))
+points(deer, pch = ".", col = alpha("black", 0.25), main = "RSF vs Probability")
+```
+
+### Comparing RSF to SSF surfaces
+We can also compare the data they contain, and what predictive power they have for the deer locations we observed.
+```{r}
+ssf1 <- deer %>% 
+      extract_covariates(stack(rsf.prob.raster, global.RSS, page.rank.raster)) 
+
+quantiles.pred <- quantile(values(rsf.prob.raster), seq(0.01, 1, by = 0.01), na.rm = T)
+percent.in.a <- rep(0,100)
+for (i in 1:(length(quantiles.pred))){
+  yup <- ssf1$layer.1 <= quantiles.pred[i]
+  percent.in.a[i] <- sum(yup, na.rm = T)
+}
+percent.in.a <- percent.in.a/table(is.na(ssf1$layer.1))[1]
+
+quantiles.pred <- quantile(values(global.RSS), seq(0.01, 1, by = 0.01), na.rm = T)
+percent.in.b <- rep(0,100)
+for (i in 1:(length(quantiles.pred))){
+  yup <- ssf1$layer.2 <= quantiles.pred[i]
+  percent.in.b[i] <- sum(yup, na.rm = T)
+}
+percent.in.b <- percent.in.b/table(is.na(ssf1$layer.2))[1]
+
+quantiles.pred <- quantile(values(page.rank.raster), seq(0.01, 1, by = 0.01), na.rm = T)
+percent.in.c <- rep(0,100)
+for (i in 1:(length(quantiles.pred))){
+  yup <- ssf1$layer.3 <= quantiles.pred[i]
+  percent.in.c[i] <- sum(yup, na.rm = T)
+}
+percent.in.c <- percent.in.c/table(is.na(ssf1$layer.3))[1]
+
+tibble(percent_pred = rep(seq(0, 1, by = 0.01)[-1],3),
+       precent_obs = c(1-percent.in.a,
+                       1-percent.in.b,
+                       1-percent.in.c),
+       pred_type = rep(c("RSF", "Summed Probability iSFF", "PageRank iSFF"), 
+                       each = 100)) %>% 
+  group_by(pred_type) %>% 
+  # mutate(cum_percent = cumsum(precent_obs)) %>% 
+  ggplot(aes(x = percent_pred, y = precent_obs, color = pred_type)) +
+  geom_point() +
+  geom_line() +
+  theme_minimal() +
+  labs(x = "Percentile of Predicted Surface",
+       y = "Cumulative Percent of Observed Data by Percentile")
+```
+
+```{r}
+quant.PR <- page.rank.raster
+values(quant.PR) <- 0
+quantiles.pred <- quantile(values(page.rank.raster), seq(0.01, 1, by = 0.01), na.rm = T)
+for(i in 1:100){
+  if(i == 1) values(quant.PR) <- ifelse(values(page.rank.raster) >= quantiles.pred[i], percent.in.c[i], 0)
+  # if(i == 65) values(quant.PR) <- ifelse(values(surf.PR) >= quantiles.pred[i], 0.5, values(quant.PR))
+  # if(i == 80) values(quant.PR) <- ifelse(values(surf.PR) >= quantiles.pred[i], 1, values(quant.PR))
+  else values(quant.PR) <- ifelse(values(page.rank.raster) >= quantiles.pred[i], percent.in.c[i], values(quant.PR))
+}
+
+plot(quant.PR)
+```
+
+
+## Fishers
+
+This is data for a few fishers with elevation, land cover, and population density. I added aspect, TRI, and slope for fun. All the subheadings are largely the same, so I won't go into too much detail. 
+
+### Data
+I created some new variables, and because extents are all different, they have to be called separately for pulling data. This is relevant later.
+```{r}
+data("amt_fisher")
+data("amt_fisher_covar")
+
+amt_fisher_covar$slope <- terrain(amt_fisher_covar$elevation, opt="slope", neighbors=8, unit="degrees")  
+
+amt_fisher_covar$aspect <- terrain(amt_fisher_covar$elevation, opt="aspect", neighbors=8, unit="degrees") 
+
+amt_fisher_covar$TRI <- terrain(amt_fisher_covar$elevation, opt="TRI", neighbors=8, unit="degrees") 
+
+ssf1 <- amt_fisher %>% 
+  filter(name == "Leroy") %>% 
+  track_resample(rate = minutes(15), tolerance = minutes(3)) %>% 
+  filter_min_n_burst(min_n = 3) %>% 
+  steps_by_burst() %>% 
+  random_steps() %>% 
+  extract_covariates(amt_fisher_covar$landuse) %>% 
+  extract_covariates(amt_fisher_covar$elevation) %>% 
+  extract_covariates(amt_fisher_covar$slope) %>% 
+  extract_covariates(amt_fisher_covar$aspect) %>% 
+  extract_covariates(amt_fisher_covar$TRI) %>% 
+  extract_covariates(amt_fisher_covar$popden) %>% 
+  mutate(landC = factor(landuse),
+    #        case_when(
+    # landuse %in% c(81, 82) ~ "agri",
+    # landuse %in% c(41, 42, 43) ~ "forest",
+    # landuse %in% c(52) ~ "shrub",
+    # landuse %in% c(31, 71) ~ "grass",
+    # landuse %in% c(90,95) ~ "wet",
+    # landuse %in% c(11, 21, 22, 23, 24) ~ "other"),
+         cos_ta = cos(ta_),
+         log_sl = log(sl_+1),
+    forest = factor(landC == 50))
+```
+
+### Model
+```{r}
+m2 <- ssf1 %>%
+  fit_clogit(case_ ~ (elevation + tri + popden + slope + aspect + cos_ta + log_sl)^2 + strata(step_id_), model = T)
+summary(m2)
+```
+
+### Surface
+```{r}
+mock.surface <- create_mock_surface(amt_fisher_covar, T, list(x = 200, y = 200))
+```
+
+### Getting cell data
+Because we cant pull all underlying raster data in one pull, we have to do it multiple times for each variable and then merge. Then we have to sort by cell number to get things square. 
+```{r}
+pred.data.l <- get_cells(m2, 
+                       mock.surface,
+                       amt_fisher_covar$landuse, 
+                       accessory.x.preds = list(log_sl = log(step_distance(m2, 0.5)), 
+                                                cos_ta = 1))
+pred.data.e <- get_cells(m2, 
+                       mock.surface,
+                       amt_fisher_covar$elevation, 
+                       accessory.x.preds = list(log_sl = log(step_distance(m2, 0.5)), 
+                                                cos_ta = 1))
+pred.data.p <- get_cells(m2, 
+                       mock.surface,
+                       amt_fisher_covar$popden, 
+                       accessory.x.preds = list(log_sl = log(step_distance(m2, 0.5)), 
+                                                cos_ta = 1))
+
+pred.data.s <- get_cells(m2, 
+                       mock.surface,
+                       amt_fisher_covar$slope, 
+                       accessory.x.preds = list(log_sl = log(step_distance(m2, 0.5)), 
+                                                cos_ta = 1))
+
+pred.data.a <- get_cells(m2, 
+                       mock.surface,
+                       amt_fisher_covar$aspect, 
+                       accessory.x.preds = list(log_sl = log(step_distance(m2, 0.5)), 
+                                                cos_ta = 1))
+
+pred.data.t <- get_cells(m2, 
+                       mock.surface,
+                       amt_fisher_covar$TRI, 
+                       accessory.x.preds = list(log_sl = log(step_distance(m2, 0.5)), 
+                                                cos_ta = 1))
+
+pred.data <- merge(
+  merge(
+    merge(
+      merge(
+        merge(pred.data.l,pred.data.e),
+        pred.data.p),
+      pred.data.s),
+    pred.data.a),
+  pred.data.t)
+
+pred.data <- pred.data %>% 
+  arrange(cellnr)
+
+pred.data$forest <- factor(pred.data$landuse == 50)
+```
+
+### Testing surface
+```{r}
+cell.data <- get_cell_data(m2, pred.data)
+```
+
+### Finding neighbors
+```{r}
+neighbors.found <- neighbor_lookup(mock.surface, cell.data)
+```
+
+### Making neighbor comparisons
+```{r}
+sparse.neighbors <- neighbor_finder(m2, cell.data, neighbors.found, quantile = 0.99)
+```
+
+### Compiling SSF comparisons
+```{r}
+ssf.comparisons <- compile_ssf_comparisons(sparse.neighbors, cell.data)
+
+ssf.comparisons <- lapply(ssf.comparisons, function(x) {
+  x$.for$log_sl <- log(x$.for$step+1)
+  x$.given$log_sl <- log(x$.given$step+1)
+  
+  x$.for$cos_ta <- 0
+  x$.given$cos_ta <- 0
+  
+  list(.for = x$.for, .given = x$.given)
+})
+```
+
+### Predicting surface probabilities
+```{r}
+surface <- predict_ssf_comparisons(m2, ssf.comparisons)
+```
+
+### Making graph
+```{r}
+g <- graph_from_adjacency_matrix(surface$sparse.matrix, mode = "directed", weighted = T, diag = T)
+V(g)$name <- V(g)
+Isolated <- which(degree(g)==0)
+Connected <- which(degree(g)>0)
+g <- delete.vertices(g, Isolated)
+g <- delete.edges(g, E(g)[is.na(weight)])
+```
+
+### Calculating centrality
+```{r}
+pg <- page_rank(g)
+
+values <- rep(NA, length(mock.surface))
+values[V(g)$name] <- pg$vector
+page.rank.raster <- setValues(mock.surface, values)
+
+plot(page.rank.raster, interpolate = F)
+points(amt_fisher %>% filter(name == "Leroy"), pch = ".", col = alpha("black", 0.1))
+```
+
+### Making a mock RSF
+```{r}
+rsf.data <- amt_fisher %>% 
+  filter(name == "Leroy") %>% 
+  random_points() %>% 
+  extract_covariates(amt_fisher_covar$landuse) %>% 
+  extract_covariates(amt_fisher_covar$elevation) %>% 
+  extract_covariates(amt_fisher_covar$slope) %>% 
+  extract_covariates(amt_fisher_covar$aspect) %>% 
+  extract_covariates(amt_fisher_covar$TRI) %>% 
+  extract_covariates(amt_fisher_covar$popden) %>% 
+  mutate(landC = factor(landuse),
+    forest = factor(landC == 50))
+
+rsf <- rsf.data %>% 
+  fit_rsf(case_ ~ (elevation + tri + popden + slope + aspect)^2, model = T) 
+summary(rsf)
+probabilities <- exp(predict(rsf$model, newdata = pred.data))/(1+exp(predict(rsf$model, newdata = pred.data)))
+rsf.prob.raster <- setValues(mock.surface, probabilities)
+plot(rsf.prob.raster)
+points(amt_fisher %>% filter(name == "Leroy"), pch = ".", col = alpha("black", 0.25))
+```
+
+Lots of interesting differences from the RSF.
+```{r}
+plot(spatialEco::rasterCorrelation(page.rank.raster, rsf.prob.raster))
+points(deer, pch = ".", col = alpha("black", 0.25))
+```
+
+### Comparing RSF to SSF surfaces
+Here, we are leveraging the fact that there are other fisher that we never modeled to test our inferences.
+```{r}
+ssf1 <- amt_fisher %>% 
+  filter(name == "Leroy") %>% 
+      extract_covariates(stack(rsf.prob.raster, page.rank.raster)) 
+
+quantiles.pred <- quantile(values(rsf.prob.raster), seq(0.01, 1, by = 0.01), na.rm = T)
+percent.in.a <- rep(0,100)
+for (i in 1:(length(quantiles.pred))){
+  yup <- ssf1$layer.1 <= quantiles.pred[i]
+  percent.in.a[i] <- sum(yup, na.rm = T)
+}
+percent.in.a <- percent.in.a/table(is.na(ssf1$layer.1))[1]
+
+quantiles.pred <- quantile(values(page.rank.raster), seq(0.01, 1, by = 0.01), na.rm = T)
+percent.in.b <- rep(0,100)
+for (i in 1:(length(quantiles.pred))){
+  yup <- ssf1$layer.2 <= quantiles.pred[i]
+  percent.in.b[i] <- sum(yup, na.rm = T)
+}
+percent.in.b <- percent.in.b/table(is.na(ssf1$layer.2))[1]
+
+tibble(percent_pred = rep(seq(0, 1, by = 0.01)[-1],2),
+       precent_obs = c(1-percent.in.a,
+                       1-percent.in.b),
+       pred_type = rep(c("RSF", "PageRank iSFF"), 
+                       each = 100)) %>% 
+  group_by(pred_type) %>% 
+  # mutate(cum_percent = cumsum(precent_obs)) %>% 
+  ggplot(aes(x = percent_pred, y = precent_obs, color = pred_type)) +
+  geom_point() +
+  geom_line() +
+  theme_minimal() +
+  labs(x = "Percentile of Predicted Surface",
+       y = "Cumulative Percent of Observed Data by Percentile")
+```
+
+```{r}
+plot(page.rank.raster>quantiles.pred[min(which((1-percent.in.b) < 0.9))])
+points(amt_fisher, pch = ".", col = alpha("black", 0.1))
+```
+
+## Bighorn Sheep (not public)
+
+This is data for a 59 sheep from SW Alberta, with elevation, forest canopy, distance to escape terrain, land cover, NDVI amplitude and maximum, slope, and vector ruggedness. I trimmed the data set for the movement models down to 4 individuals. 
+
+### Data
+```{r}
+files <- c("aspect.tif","canopy.tif","descp37.tif","elev.tif","escp37.tif","lc_for.tif","lc_grass.tif","lc_other.tif","lc_rock.tif","lc_shrub.tif","ndvi_amp.tif","ndvi_max.tif","slope.tif","vrm3.tif")
+
+raster_list <- c()
+for (i in 1:length(files)) {
+  tmp <- str_remove(files[i], ".tif")
+  name <- paste0("~/Downloads/Research/BHS_Mvmt/Data/RSF-2/GIS/writtenrasters/",
+                 files[i])
+  raster_list <- append(raster_list,  assign(tmp, raster(name)))
+}
+rstack <- stack(raster_list)
+rstack. <- aggregate(rstack, 50)
+# plot(rstack.)
+length(rstack.)
+plot(sin(pi*rstack$aspect))
+```
+
+The movement tracks are already in individual step formats. I also appended some info from a HMM segmentation. 
+```{r}
+processed <- readRDS("~/Downloads/Research/BHS_Mvmt/Sheep_Mvmt/Manuscript Code/Processed.rds")
+
+four.ind <- processed %>% 
+  filter(ID %in% c("282_2008", "593_2008", "600_2007", "677_2005")) %>% 
+  group_by(ID) %>% 
+  distinct(dt, .keep_all = T) %>%
+  ungroup() %>% 
+  mutate(date_time = as.POSIXct(date_time)) %>% 
+  dplyr::select(x = x.1, y = y.1, 
+         t = date_time, id = ID, age = age, state = states) %>% 
+  arrange_at(c("id", "t")) %>% 
+  nest(data = -c("id")) %>% 
+  mutate(trk = lapply(data,
+                      function(d) {
+                        make_track(d, x, y, t, 
+                                   age = age, 
+                                   state = state, # this is from a HMM segmentation in three de novo states
+                                   crs = sp::CRS("+proj=utm +zone=11"))
+                        })) %>% 
+  mutate(steps = map(trk, function(x) {
+    x %>%
+      track_resample(rate = minutes(30), tolerance = minutes(10)) %>%
+      steps_by_burst(keep_cols = "start") %>%
+      random_steps(15) %>%
+      extract_covariates(rstack.) %>% 
+      mutate(
+        # lc_shrub = factor(lc_shrub),
+        # lc_for = factor(lc_for),
+        # lc_grass = factor(lc_grass),
+        # lc_other = factor(lc_other),
+        # lc_rock = factor(lc_rock),
+        # escp37 = factor(escp37),
+        cos_ta = cos(ta_),
+        log_sl = log(sl_+1))
+  }))
+```
+
+### Model
+
+```{r}
+m2 <- four.ind %>%
+  mutate(model = map(steps, function(x) {
+    x %>% 
+      fit_clogit(case_ ~ log_sl + poly(canopy,2) + poly(vrm3,2) + poly(lc_grass,1) + poly(lc_shrub,2) + poly(lc_rock,2) + poly(ndvi_amp,1) + cos_ta + strata(step_id_), model = T)
+  }))
+```
+
+### Surface
+```{r}
+mock.surface <- create_mock_surface(rstack., F, list(x = 1250, y = 1250))
+```
+
+### Getting cell data
+Since we have multiple models fit, we can just use the first model to get everything into shape.
+```{r}
+pred.data <- get_cells(m2$model[[1]], 
+                       mock.surface,
+                       rstack., 
+                       accessory.x.preds = list(log_sl = log(step_distance(m2$model[[1]], 0.5)), 
+                                                cos_ta = 1))
+
+pred.data <- pred.data %>% 
+  arrange(cellnr)
+
+# pred.data$lc_for <- factor(pred.data$lc_for)
+# pred.data$lc_grass <- factor(pred.data$lc_grass)
+# pred.data$lc_other <- factor(pred.data$lc_other)
+# pred.data$lc_shrub <- factor(pred.data$lc_shrub)
+# pred.data$lc_rock <- factor(pred.data$lc_rock)
+# pred.data$escp37 <- factor(pred.data$escp37)
+```
+
+### Testing surface
+```{r}
+cell.data <- get_cell_data(m2$model[[1]], pred.data)
+plot(setValues(mock.surface, cell.data$lRSS), useRaster = T, interpolate = F)
+lines(m2$trk[[1]])
+```
+
+### Finding neighbors
+```{r}
+cell.data.list <- pbmclapply(as.list(1:dim(cell.data)[1]), function(x) cell.data[x[1],])
+neighbors.found <- neighbor_lookup(mock.surface, cell.data, cell.data.list)
+```
+
+### Making neighbor comparisons
+```{r}
+sparse.neighbors <- neighbor_finder(m2$model[[3]], cell.data, neighbors.found, quantile = 0.999999999999999, cell.data.list)
+```
+
+### Compiling SSF comparisons
+```{r}
+ssf.comparisons <- compile_ssf_comparisons(sparse.neighbors, cell.data)
+
+ssf.comparisons <- lapply(ssf.comparisons, function(x) {
+  x$.for$log_sl <- log(x$.for$step+1)
+  x$.given$log_sl <- log(x$.given$step+1)
+  
+  x$.for$cos_ta <- 0
+  x$.given$cos_ta <- 0
+  
+  list(.for = x$.for, .given = x$.given)
+})
+```
+
+### Predicting surface probabilities
+TIDYVERSE BABYYYYYY
+```{r}
+predicted.surfaces <- m2 %>% 
+  mutate(surfaces = map(model, function(x) {
+    predict_ssf_comparisons(x, ssf.comparisons)
+  }))
+```
+
+### Making graph
+TIDYVERSE AGAIN BABYYYYYY #roUND 2
+```{r}
+graphs <- predicted.surfaces %>% 
+  mutate(graph = map(surfaces, function(x) {
+    g <- graph_from_adjacency_matrix(x$sparse.matrix, mode = "directed", weighted = T, diag = T)
+    V(g)$name <- V(g)
+    Isolated <- which(degree(g)==0)
+    Connected <- which(degree(g)>0)
+    g <- delete.vertices(g, Isolated)
+    g <- delete.edges(g, E(g)[is.na(weight)])
+    g
+  }))
+```
+
+### Calculating centrality
+```{r}
+centrality.surface <- graphs %>% 
+  mutate(centrality = map(graph, function(x) {
+    pg <- page_rank(x)
+    values <- rep(NA, length(mock.surface))
+    values[V(x)$name] <- pg$vector
+    page.rank.raster <- setValues(mock.surface, values)
+    page.rank.raster
+  }))
+
+par(mfrow = c(2,2))
+plot(centrality.surface$centrality[[1]]^(1/2), interpolate = F)
+points(centrality.surface$data[[1]], pch = ".", col = alpha("black", 0.1))
+plot(centrality.surface$centrality[[2]], interpolate = F)
+points(centrality.surface$data[[2]], pch = ".", col = alpha("black", 0.1))
+plot(centrality.surface$centrality[[3]], interpolate = F)
+points(centrality.surface$data[[3]], pch = ".", col = alpha("black", 0.1))
+plot(centrality.surface$centrality[[4]], interpolate = F)
+points(centrality.surface$data[[4]], pch = ".", col = alpha("black", 0.1))
+
+cor(cbind(values(centrality.surface$centrality[[1]]), 
+          values(centrality.surface$centrality[[2]]),
+          values(centrality.surface$centrality[[3]]),
+          values(centrality.surface$centrality[[4]])),
+    use = "pairwise.complete",
+    method = "spearman")
+```
+### Comparing RSF to SSF surfaces
+Here, we are leveraging the fact that there are other fisher that we never modeled to test our inferences.
+```{r}
+comparison <- processed
+
+extracted <- raster::extract(stack(centrality.surface$centrality), as.matrix(comparison[,c("x.1", "y.1")]), df=TRUE)
+  
+quantiles <- lapply(centrality.surface$centrality, function(x){
+    quantile(values(x), seq(0.01, 1, by = 0.01), na.rm = T)
+  })
+
+percent.in.1 <- rep(0,100)
+for (i in 1:(length(percent.in.1))){
+  yup <- extracted$layer.1 <= quantiles[[1]][i]
+  percent.in.1[i] <- sum(yup, na.rm = T)
+}
+percent.in.1 <- percent.in.1/table(is.na(extracted$layer.1))[1]
+
+percent.in.2 <- rep(0,100)
+for (i in 1:(length(percent.in.2))){
+  yup <- extracted$layer.2 <= quantiles[[1]][i]
+  percent.in.2[i] <- sum(yup, na.rm = T)
+}
+percent.in.2 <- percent.in.2/table(is.na(extracted$layer.2))[1]
+
+percent.in.3 <- rep(0,100)
+for (i in 1:(length(percent.in.3))){
+  yup <- extracted$layer.3 <= quantiles[[1]][i]
+  percent.in.3[i] <- sum(yup, na.rm = T)
+}
+percent.in.3 <- percent.in.3/table(is.na(extracted$layer.3))[1]
+
+percent.in.4 <- rep(0,100)
+for (i in 1:(length(percent.in.4))){
+  yup <- extracted$layer.4 <= quantiles[[1]][i]
+  percent.in.4[i] <- sum(yup, na.rm = T)
+}
+percent.in.4 <- percent.in.4/table(is.na(extracted$layer.4))[1]
+
+tibble(percent_pred = rep(seq(0, 1, by = 0.01)[-1],4),
+       precent_obs = 
+         # c(NA,diff(percent.in.1),
+         #   NA,diff(percent.in.2),
+         #   NA,diff(percent.in.3),
+         #   NA,diff(percent.in.4)),
+         c(1-percent.in.1,
+           1-percent.in.2,
+           1-percent.in.3,
+           1-percent.in.4),
+       pred_type = rep(paste("Animal", 1:4), 
+                       each = 100)) %>% 
+  group_by(pred_type) %>% 
+  # mutate(cum_percent = cumsum(precent_obs)) %>% 
+  ggplot(aes(x = percent_pred, y = precent_obs, color = pred_type)) +
+  geom_point() +
+  geom_line() +
+  theme_minimal() +
+  labs(x = "Percentile of Predicted Surface",
+       y = "Cumulative Percent of Observed Data by Percentile")
+```
+
+Variation in animal predictions!!! Super cooooooool
+```{r}
+pheno <- processed[processed$ID %in% four.ind$id,]
+as.data.frame(pheno) %>% 
+  distinct(ID,sex, age) 
+
+par(mfrow = c(2,2))
+plot(centrality.surface$centrality[[1]]>quantiles[[1]][min(which((1-percent.in.1) < 0.5))])
+points(comparison$x_, comparison$y_, pch = ".", col = alpha("black", alpha = 1))
+plot(centrality.surface$centrality[[2]]>quantiles[[2]][min(which((1-percent.in.2) < 0.5))])
+points(comparison$x_, comparison$y_, pch = ".", col = alpha("black", alpha = 1))
+plot(centrality.surface$centrality[[3]]>quantiles[[3]][min(which((1-percent.in.3) < 0.5))])
+points(comparison$x_, comparison$y_, pch = ".", col = alpha("black", alpha = 1))
+plot(centrality.surface$centrality[[4]]>quantiles[[4]][min(which((1-percent.in.4) < 0.5))])
+points(comparison$x_, comparison$y_, pch = ".", col = alpha("black", alpha = 1))
+```
